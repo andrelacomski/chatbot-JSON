@@ -1,0 +1,98 @@
+package servidortcp;
+
+import java.io.*;
+import java.net.*;
+
+/**
+ *
+ * @author lacomski
+ */
+class Filme {
+
+    public String titulo;
+    public int ano;
+}
+
+public class ClienteTCP {
+
+    private String serverHost;
+    private int port;
+    private Socket serverSocket;
+    private DataOutputStream out;
+    private DataInputStream in;
+    private String mensagem;
+
+    ClienteTCP(String servidor, int porta) {
+        this.serverHost = servidor;
+        this.port = porta;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    public void setServerHost(String serverHost) {
+        this.serverHost = serverHost;
+    }
+
+    ;
+    
+    public String getServerHost() {
+        return this.serverHost;
+    }
+
+    public int getPort() {
+        return this.port;
+    }
+
+    public void setMensagem(String mensagem) {
+        this.mensagem = mensagem;
+    }
+
+    public String getMensagem() {
+        return this.mensagem;
+    }
+
+    public boolean conectar() throws IOException {
+        System.out.println("Tentando conexão no host: " + this.getServerHost() + ":" + this.getPort());
+        try {
+            this.serverSocket = new Socket(this.getServerHost(), this.getPort());
+            this.out = new DataOutputStream(this.serverSocket.getOutputStream());
+            this.in = new DataInputStream(this.serverSocket.getInputStream());
+        } catch (UnknownHostException e) {
+            System.out.println("Este host não existe: " + this.serverHost);
+            return false;
+        } catch (IOException io) {
+            System.out.println("Não foi possível obter I/O para o server: " + this.serverHost);
+            return false;
+        }
+        System.out.println("CONECTADO!");
+        return true;
+    }
+
+    public boolean desconectar() throws IOException {
+        this.out.close();
+        this.in.close();
+        this.serverSocket.close();
+        System.out.println("DESCONECTADO!");
+        return true;
+    }
+
+    public boolean enviarMensagem() throws IOException {
+        System.out.println("Entrada de dados: " + this.getMensagem());
+        Filme f = new Filme();
+        f.titulo = this.getMensagem();
+        f.ano = 1000;
+        Gson gson = new Gson();
+         
+        out.writeUTF(gson.toJson(f));
+        String retorno = this.getMensagem() + " " + this.in.readUTF();
+        this.setMensagem(retorno);
+        return true;
+    }
+
+    public static void main(String[] args) throws IOException {
+        
+    }
+
+}
