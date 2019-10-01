@@ -1,17 +1,14 @@
 package servidortcp;
 
+import com.google.gson.Gson;
 import java.io.*;
 import java.net.*;
+import servidortcp.models.Filme;
 
 /**
  *
  * @author lacomski
  */
-class Filme {
-
-    public String titulo;
-    public int ano;
-}
 
 public class ClienteTCP {
 

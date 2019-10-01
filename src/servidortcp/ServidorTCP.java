@@ -4,6 +4,8 @@ import java.io.*;
 import java.net.*;
 import java.util.Scanner;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import servidortcp.models.Filme;
 
 /**
  *
@@ -59,10 +61,12 @@ public class ServidorTCP extends Thread{
             try{
                 DataOutputStream out = new DataOutputStream(clienteSocket.getOutputStream()); // prepara para enviar os dados
                 DataInputStream in = new DataInputStream(this.clienteSocket.getInputStream());
-                String inputLine = in.readUTF();
-                while(inputLine != null){ // ler dados do cliente
-                    System.out.println("Cliente:" + inputLine);
-                    out.writeUTF(inputLine.toUpperCase());
+               
+                String recebe;
+                while((recebe = in.readUTF()) != null){ // ler dados do cliente
+                    Filme inputLine = new Gson().fromJson(recebe, Filme.class);
+                    System.out.println("Cliente:" + inputLine.titulo + " Ano:" + inputLine.ano);
+                    out.writeUTF("");
                 }
                 out.close();
                 in.close();
