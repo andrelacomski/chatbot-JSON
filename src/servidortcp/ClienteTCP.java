@@ -3,7 +3,7 @@ package servidortcp;
 import com.google.gson.Gson;
 import java.io.*;
 import java.net.*;
-import servidortcp.models.Filme;
+import servidortcp.models.Cliente;
 
 /**
  *
@@ -77,12 +77,10 @@ public class ClienteTCP {
 
     public boolean enviarMensagem() throws IOException {
         System.out.println("Entrada de dados: " + this.getMensagem());
-        Filme f = new Filme();
-        f.titulo = this.getMensagem();
-        f.ano = 1000;
+        Cliente cliente = new Cliente();
         Gson gson = new Gson();
          
-        out.writeUTF(gson.toJson(f));
+        out.writeUTF(gson.toJson(cliente));
         String retorno = this.getMensagem() + " " + this.in.readUTF();
         this.setMensagem(retorno);
         return true;
