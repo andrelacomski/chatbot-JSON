@@ -1,10 +1,10 @@
-package servidortcp;
+package models;
 
 import java.io.*;
 import java.net.*;
 import java.util.Scanner;
 import com.google.gson.Gson;
-import servidortcp.models.Cliente;
+import models.Cliente;
 
 /**
  *
@@ -15,6 +15,7 @@ import servidortcp.models.Cliente;
 public class ServidorTCP extends Thread{
 
     protected Socket clienteSocket;
+    protected Cliente cliente;
     
     public static void main(String[] args) throws IOException {
         ServerSocket serverSocket = null;
@@ -23,10 +24,10 @@ public class ServidorTCP extends Thread{
             System.out.print("Digite a porta: ");
             int porta = entrada.nextInt();
             serverSocket = new ServerSocket(porta);
-            System.out.println("Conexão estabelicida!");
+            System.out.println("Servidor online.");
             try{
                 while(true){
-                    System.out.println("Aguardando conexão...");
+                    System.out.println("Aguardando conexão do cliente...");
                     new ServidorTCP(serverSocket.accept()); // aceita conexão
                 }
             }
@@ -59,13 +60,24 @@ public class ServidorTCP extends Thread{
             System.out.println("Nova comunicação em Thread Iniciada!");
             try{
                 DataOutputStream out = new DataOutputStream(clienteSocket.getOutputStream()); // prepara para enviar os dados
-                DataInputStream in = new DataInputStream(this.clienteSocket.getInputStream());
+                DataInputStream in = new DataInputStream(this.clienteSocket.getInputStream()); // prepara para receber os dados
                
                 String recebe;
                 while((recebe = in.readUTF()) != null){ // ler dados do cliente
-                    Cliente inputLine = new Gson().fromJson(recebe, Cliente.class);
-                    selecionadorTarefas(inputLine);
-                    out.writeUTF("");
+                    Protocolo protocolo = new Gson().fromJson(recebe, Protocolo.class);
+                    switch(protocolo.getAction()){
+                        case "login":
+                            this.cliente = new Cliente(1, protocolo.getNome(), 
+                                                       clienteSocket.getInetAddress().toString(),
+                                                        clienteSocket.getPort(), true);
+                            System.out.println("Cliente: " + cliente.getIp() + ":" + cliente.getPorta() + " Status: " + cliente.getStatus());
+                            
+                            out.writeUTF("ok");
+                            break;
+                        case "logout":
+                            break;
+                    }
+                    //out.writeUTF("");
                 }
                 out.close();
                 in.close();
@@ -76,7 +88,7 @@ public class ServidorTCP extends Thread{
             }
         }            
         
-        public void selecionadorTarefas(Cliente cliente){
+        public void selecionadorTarefas(Protocolo protocolo){
             
         }
 }

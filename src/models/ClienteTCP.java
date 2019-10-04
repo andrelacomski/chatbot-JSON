@@ -1,9 +1,10 @@
-package servidortcp;
+package models;
 
 import com.google.gson.Gson;
 import java.io.*;
 import java.net.*;
-import servidortcp.models.Cliente;
+import models.Cliente;
+import models.Protocolo;
 
 /**
  *
@@ -19,7 +20,7 @@ public class ClienteTCP {
     private DataInputStream in;
     private String mensagem;
 
-    ClienteTCP(String servidor, int porta) {
+    public ClienteTCP(String servidor, int porta) {
         this.serverHost = servidor;
         this.port = porta;
     }
@@ -32,8 +33,6 @@ public class ClienteTCP {
         this.serverHost = serverHost;
     }
 
-    ;
-    
     public String getServerHost() {
         return this.serverHost;
     }
@@ -63,8 +62,17 @@ public class ClienteTCP {
             System.out.println("Não foi possível obter I/O para o server: " + this.serverHost);
             return false;
         }
-        System.out.println("CONECTADO!");
-        return true;
+
+        Protocolo protocolo = new Protocolo("login", "Cliente");
+        Gson gson = new Gson();
+        out.writeUTF(gson.toJson(protocolo));
+
+        String resposta = this.in.readUTF();
+        System.out.println("Resposta do servidor: " + resposta);
+        if(resposta.equals("ok"))
+            return true;
+        else
+            return false;
     }
 
     public boolean desconectar() throws IOException {
@@ -76,13 +84,13 @@ public class ClienteTCP {
     }
 
     public boolean enviarMensagem() throws IOException {
-        System.out.println("Entrada de dados: " + this.getMensagem());
-        Cliente cliente = new Cliente();
-        Gson gson = new Gson();
-         
-        out.writeUTF(gson.toJson(cliente));
-        String retorno = this.getMensagem() + " " + this.in.readUTF();
-        this.setMensagem(retorno);
+//        System.out.println("Entrada de dados: " + this.getMensagem());
+//        Cliente cliente = new Cliente();
+//        Gson gson = new Gson();
+//         
+//        out.writeUTF(gson.toJson(cliente));
+//        String retorno = this.getMensagem() + " " + this.in.readUTF();
+//        this.setMensagem(retorno);
         return true;
     }
 
