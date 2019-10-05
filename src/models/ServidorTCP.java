@@ -37,7 +37,7 @@ public class ServidorTCP extends Thread{
             }
         }
         catch (IOException io){
-            System.err.println("Não foi possível abrir a porta: 8080");
+            System.err.println("Não foi possível abrir a porta: " + serverSocket.getLocalPort());
             System.exit(1);
         }
         finally{
@@ -57,12 +57,12 @@ public class ServidorTCP extends Thread{
         }    
         
         public void run (){
-            System.out.println("Nova comunicação em Thread Iniciada!");
+            System.out.println("Nova cliente em Thread Iniciada.");
             try{
                 DataOutputStream out = new DataOutputStream(clienteSocket.getOutputStream()); // prepara para enviar os dados
                 DataInputStream in = new DataInputStream(this.clienteSocket.getInputStream()); // prepara para receber os dados
                
-                String recebe;
+                String recebe; boolean close = false;
                 while((recebe = in.readUTF()) != null){ // ler dados do cliente
                     Protocolo protocolo = new Gson().fromJson(recebe, Protocolo.class);
                     switch(protocolo.getAction()){
@@ -70,25 +70,27 @@ public class ServidorTCP extends Thread{
                             this.cliente = new Cliente(1, protocolo.getNome(), 
                                                        clienteSocket.getInetAddress().toString(),
                                                         clienteSocket.getPort(), true);
-                            System.out.println("Cliente: " + cliente.getIp() + ":" + cliente.getPorta() + " Status: " + cliente.getStatus());
+                            System.out.println("Cliente conectado: " + cliente.getNome());
                             
                             out.writeUTF("ok");
                             break;
                         case "logout":
+                            out.writeUTF("ok");
+                            out.close();
+                            in.close();                           
+                            clienteSocket.close();
+                            cliente.setStatus(false);
+                            close = true;
                             break;
                     }
-                    //out.writeUTF("");
+                    if(close)
+                        break;
                 }
-                out.close();
-                in.close();
-                clienteSocket.close();
+                
             }
             catch (IOException e){
-                System.out.println("Cliente desconectado: " + this.clienteSocket.getLocalAddress().getHostAddress());
+                System.out.println("Erro ao desconectar o Cliente: " + this.clienteSocket.getLocalAddress().getHostAddress());
             }
+            System.out.println("Cliente desconectado: " + this.cliente.getNome());
         }            
-        
-        public void selecionadorTarefas(Protocolo protocolo){
-            
-        }
 }

@@ -11,6 +11,12 @@ public class Cliente {
     private String ip;
     private boolean status;
     
+    public Cliente(String ip, int porta, String nome){
+        this.ip = ip;
+        this.porta = porta;
+        this.nome = nome;
+    }
+    
     public Cliente(int id, String nome, String ip, int porta, boolean status){
         this.id = id;
         this.nome = nome;
@@ -59,16 +65,3 @@ public class Cliente {
         this.status = status;
     }    
 }
-
-
-
-
-//
-//{
-//   "action": "login",
-//    "nome": "xx",
-//}
-//
-//{
-//    "action": "logout", 
-//}

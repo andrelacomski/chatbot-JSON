@@ -13,32 +13,14 @@ import models.Protocolo;
 
 public class ClienteTCP {
 
-    private String serverHost;
-    private int port;
+    private Cliente cliente;
     private Socket serverSocket;
     private DataOutputStream out;
     private DataInputStream in;
     private String mensagem;
 
-    public ClienteTCP(String servidor, int porta) {
-        this.serverHost = servidor;
-        this.port = porta;
-    }
-
-    public void setPort(int port) {
-        this.port = port;
-    }
-
-    public void setServerHost(String serverHost) {
-        this.serverHost = serverHost;
-    }
-
-    public String getServerHost() {
-        return this.serverHost;
-    }
-
-    public int getPort() {
-        return this.port;
+    public ClienteTCP(Cliente cliente) {
+        this.cliente = cliente;
     }
 
     public void setMensagem(String mensagem) {
@@ -50,20 +32,20 @@ public class ClienteTCP {
     }
 
     public boolean conectar() throws IOException {
-        System.out.println("Tentando conexão no host: " + this.getServerHost() + ":" + this.getPort());
+        System.out.println("Tentando conexão no host: " + this.cliente.getIp()+ ":" + this.cliente.getPorta());
         try {
-            this.serverSocket = new Socket(this.getServerHost(), this.getPort());
+            this.serverSocket = new Socket(this.cliente.getIp(), this.cliente.getPorta());
             this.out = new DataOutputStream(this.serverSocket.getOutputStream());
             this.in = new DataInputStream(this.serverSocket.getInputStream());
         } catch (UnknownHostException e) {
-            System.out.println("Este host não existe: " + this.serverHost);
+            System.out.println("Este host não existe: " + this.cliente.getIp());
             return false;
         } catch (IOException io) {
-            System.out.println("Não foi possível obter I/O para o server: " + this.serverHost);
+            System.out.println("Não foi possível obter I/O para o server: " + this.cliente.getIp());
             return false;
         }
 
-        Protocolo protocolo = new Protocolo("login", "Cliente");
+        Protocolo protocolo = new Protocolo("login", this.cliente.getNome());
         Gson gson = new Gson();
         out.writeUTF(gson.toJson(protocolo));
 
@@ -76,11 +58,18 @@ public class ClienteTCP {
     }
 
     public boolean desconectar() throws IOException {
-        this.out.close();
-        this.in.close();
-        this.serverSocket.close();
-        System.out.println("DESCONECTADO!");
-        return true;
+        Protocolo protocolo = new Protocolo("logout");
+        Gson gson = new Gson();
+        out.writeUTF(gson.toJson(protocolo));
+        String resposta = this.in.readUTF();
+        System.out.println("Resposta do servidor: " + resposta);
+        if(resposta.equals("ok")){
+            this.out.close();
+            this.in.close();
+            this.serverSocket.close();
+            System.out.println("Desconectado.");
+            return true;            
+        } else return false;
     }
 
     public boolean enviarMensagem() throws IOException {

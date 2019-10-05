@@ -8,6 +8,9 @@ public class Protocolo {
     private String action;
     private String nome;
 
+    public Protocolo(String action){
+        this.action = action;
+    }
     
     public Protocolo(String action, String nome){
         this.action = action;
