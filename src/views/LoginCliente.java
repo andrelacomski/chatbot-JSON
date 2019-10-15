@@ -2,6 +2,8 @@ package views;
 
 import java.awt.Color;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import models.Cliente;
 import models.ClienteTCP;
@@ -163,7 +165,11 @@ public class LoginCliente extends javax.swing.JFrame {
     private void bLoginMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bLoginMouseClicked
     
         this.cliente = new Cliente(this.iAddress.getText(), Integer.parseInt(this.iPort.getText()), this.iName.getText());            
-        this.clientetcp = new ClienteTCP(cliente);
+        try {
+            this.clientetcp = new ClienteTCP(cliente);
+        } catch (IOException ex) {
+            Logger.getLogger(LoginCliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
         boolean status = false;
         try {
             status = this.clientetcp.conectar();

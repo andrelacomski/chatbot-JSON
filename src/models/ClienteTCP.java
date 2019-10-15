@@ -3,8 +3,6 @@ package models;
 import com.google.gson.Gson;
 import java.io.*;
 import java.net.*;
-import models.Cliente;
-import models.Protocolo;
 
 /**
  *
@@ -19,8 +17,9 @@ public class ClienteTCP {
     private DataInputStream in;
     private String mensagem;
 
-    public ClienteTCP(Cliente cliente) {
+    public ClienteTCP(Cliente cliente) throws IOException {
         this.cliente = cliente;
+        conectar();
     }
 
     public void setMensagem(String mensagem) {
@@ -31,6 +30,10 @@ public class ClienteTCP {
         return this.mensagem;
     }
 
+    /**
+     *
+     * @throws IOException
+     */
     public boolean conectar() throws IOException {
         System.out.println("Tentando conexão no host: " + this.cliente.getIp()+ ":" + this.cliente.getPorta());
         try {
@@ -41,6 +44,7 @@ public class ClienteTCP {
             System.out.println("Este host não existe: " + this.cliente.getIp());
             return false;
         } catch (IOException io) {
+            System.out.println(io.toString());
             System.out.println("Não foi possível obter I/O para o server: " + this.cliente.getIp());
             return false;
         }
@@ -51,10 +55,7 @@ public class ClienteTCP {
 
         String resposta = this.in.readUTF();
         System.out.println("Resposta do servidor: " + resposta);
-        if(resposta.equals("ok"))
-            return true;
-        else
-            return false;
+        return resposta.equals("ok");
     }
 
     public boolean desconectar() throws IOException {
@@ -73,18 +74,16 @@ public class ClienteTCP {
     }
 
     public boolean enviarMensagem() throws IOException {
-//        System.out.println("Entrada de dados: " + this.getMensagem());
-//        Cliente cliente = new Cliente();
-//        Gson gson = new Gson();
-//         
-//        out.writeUTF(gson.toJson(cliente));
-//        String retorno = this.getMensagem() + " " + this.in.readUTF();
-//        this.setMensagem(retorno);
+        System.out.println("Entrada de dados: " + this.getMensagem());
+        Cliente cliente = new Cliente("",20000,"");
+        Gson gson = new Gson();
+         
+        out.writeUTF(gson.toJson(cliente));
+        String retorno = this.getMensagem() + " " + this.in.readUTF();
+        this.setMensagem(retorno);
         return true;
     }
 
     public static void main(String[] args) throws IOException {
-        
     }
-
 }

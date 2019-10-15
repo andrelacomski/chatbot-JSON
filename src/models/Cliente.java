@@ -5,7 +5,6 @@ package models;
  * @author lacomski
  */
 public class Cliente {
-    private int id;
     private int porta;
     private String nome;
     private String ip;
@@ -17,18 +16,13 @@ public class Cliente {
         this.nome = nome;
     }
     
-    public Cliente(int id, String nome, String ip, int porta, boolean status){
-        this.id = id;
+    public Cliente(String nome, String ip, int porta, boolean status){
         this.nome = nome;
         this.ip = ip;
         this.porta = porta;
         this.status = status;
     }
     
-    public int getId() {
-        return this.id;
-    }
-
     public String getIp() {
         return this.ip;
     }
@@ -45,9 +39,6 @@ public class Cliente {
         return this.status;
     }
     
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public void setIp(String ip) {
         this.ip = ip;
