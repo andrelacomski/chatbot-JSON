@@ -1,13 +1,14 @@
 package models;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 
 public class ListaClientes {
  
     private static ListaClientes uniqueInstance;
-    private final ArrayList<Cliente> clientes = new ArrayList<>();
+    private final List<Cliente> clientes = new ArrayList<>();
     
     private ListaClientes() {
     }
@@ -24,7 +25,7 @@ public class ListaClientes {
         return this.clientes.size();
     }
     
-    public ArrayList<Cliente> getClientes(){
+    public List<Cliente> getClientes(){
         return this.clientes;
     }
     public void setClientes(Cliente cliente){

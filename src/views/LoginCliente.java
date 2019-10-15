@@ -164,7 +164,7 @@ public class LoginCliente extends javax.swing.JFrame {
 
     private void bLoginMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bLoginMouseClicked
     
-        this.cliente = new Cliente(this.iAddress.getText(), Integer.parseInt(this.iPort.getText()), this.iName.getText());            
+        this.cliente = new Cliente(this.iAddress.getText(), Integer.parseInt(this.iPort.getText()), this.iName.getText(),null);            
         try {
             this.clientetcp = new ClienteTCP(cliente);
         } catch (IOException ex) {

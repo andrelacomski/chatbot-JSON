@@ -1,28 +1,42 @@
 package models;
 
+import java.io.DataOutputStream;
+
 /**
  *
  * @author lacomski
  */
+
 public class Cliente {
-    private int porta;
-    private String nome;
-    private String ip;
-    private boolean status;
-    
-    public Cliente(String ip, int porta, String nome){
+
+    public int porta;
+    public String nome;
+    public String ip;
+    public boolean status;
+
+    public transient DataOutputStream saidaCliente;
+
+    public void setSaidaCliente(DataOutputStream saidaCliente) {
+        this.saidaCliente = saidaCliente;
+    }
+
+    public Cliente() {
+    }
+
+    public Cliente(String ip, int porta, String nome, DataOutputStream saidaCliente) {
         this.ip = ip;
         this.porta = porta;
         this.nome = nome;
+        this.saidaCliente = saidaCliente;
     }
-    
-    public Cliente(String nome, String ip, int porta, boolean status){
+
+    public Cliente(String nome, String ip, int porta, boolean status) {
         this.nome = nome;
         this.ip = ip;
         this.porta = porta;
         this.status = status;
     }
-    
+
     public String getIp() {
         return this.ip;
     }
@@ -35,10 +49,9 @@ public class Cliente {
         return this.porta;
     }
 
-    public boolean getStatus(){
+    public boolean getStatus() {
         return this.status;
     }
-    
 
     public void setIp(String ip) {
         this.ip = ip;
@@ -54,5 +67,13 @@ public class Cliente {
 
     public void setStatus(boolean status) {
         this.status = status;
-    }    
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public DataOutputStream getSaidaCliente() {
+        return saidaCliente;
+    }
 }
