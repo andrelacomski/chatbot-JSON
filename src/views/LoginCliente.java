@@ -7,11 +7,6 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import models.Cliente;
 import models.ClienteTCP;
-
-/**
- *
- * @author lacomski
- */
 public class LoginCliente extends javax.swing.JFrame {
 
     private ClienteTCP clientetcp;
@@ -164,9 +159,11 @@ public class LoginCliente extends javax.swing.JFrame {
 
     private void bLoginMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bLoginMouseClicked
     
+        Home home = new Home(clientetcp, cliente);
+        
         this.cliente = new Cliente(this.iAddress.getText(), Integer.parseInt(this.iPort.getText()), this.iName.getText(),null);            
         try {
-            this.clientetcp = new ClienteTCP(cliente);
+            this.clientetcp = new ClienteTCP(cliente, home);
         } catch (IOException ex) {
             Logger.getLogger(LoginCliente.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -177,7 +174,6 @@ public class LoginCliente extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, ex.getMessage());
         }
         if(status == true){
-            Home home = new Home(clientetcp, cliente);
             home.setVisible(true);
             this.dispose();
         } else 
