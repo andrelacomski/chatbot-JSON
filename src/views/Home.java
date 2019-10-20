@@ -19,17 +19,19 @@ import models.Cliente;
 public class Home extends javax.swing.JFrame {
 
     private ClienteTCP clientetcp;
-    private Cliente cliente;
     private DefaultListModel model;
     
-    public Home(ClienteTCP clientetcp, Cliente cliente) {
+    public void setClienteTCP(ClienteTCP clientetcp){
+        this.clientetcp = clientetcp;
+    }
+    
+    public Home(ClienteTCP clientetcp) {
         initComponents();
         this.model = new DefaultListModel<>();
         this.lista.setModel(this.model);
         this.setLocationRelativeTo(null);
         this.setTitle("Dashboard");
         this.clientetcp = clientetcp;
-        this.cliente = cliente;        
     }
 
     private Home() {
