@@ -39,7 +39,7 @@ public class Recever extends Thread {
                 }
             }
         } catch (IOException ex) {
-            Logger.getLogger(Recever.class.getName()).log(Level.SEVERE, null, ex);
+//            Logger.getLogger(Recever.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

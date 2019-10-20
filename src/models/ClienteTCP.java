@@ -58,17 +58,11 @@ public class ClienteTCP extends Thread {
         Protocolo protocolo = new Protocolo("logout");
         Gson gson = new Gson();
         out.writeUTF(gson.toJson(protocolo));
-        String resposta = this.in.readUTF();
-        System.out.println("Resposta do servidor: " + resposta);
-        if (resposta.equals("ok")) {
-            this.out.close();
-            this.in.close();
-            this.serverSocket.close();
-            System.out.println("Desconectado.");
-            return true;
-        } else {
-            return false;
-        }
+        this.out.close();
+        this.in.close();
+        this.serverSocket.close();
+        System.out.println("Desconectado.");
+        return true;
     }
 
     public boolean enviarMensagem() throws IOException {
