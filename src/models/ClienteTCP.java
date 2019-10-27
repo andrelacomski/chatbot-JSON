@@ -3,7 +3,7 @@ package models;
 import com.google.gson.Gson;
 import java.io.*;
 import java.net.*;
-import views.Home;
+import views.HomeView;
 
 public class ClienteTCP extends Thread {
 
@@ -12,9 +12,9 @@ public class ClienteTCP extends Thread {
     private DataOutputStream out;
     private DataInputStream in;
     private String mensagem;
-    private Home home;
+    private HomeView home;
 
-    public ClienteTCP(Cliente cliente, Home home) throws IOException {
+    public ClienteTCP(Cliente cliente, HomeView home) throws IOException {
         this.cliente = cliente;
         this.home = home;
         //conectar();

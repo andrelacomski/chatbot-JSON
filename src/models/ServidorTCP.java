@@ -6,57 +6,34 @@ import java.util.Scanner;
 import com.google.gson.Gson;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import views.ServidorView;
 
 public class ServidorTCP extends Thread {
 
     protected Socket clienteSocket;
     protected Cliente cliente;
-    public static int qtdClientes;
+    protected ServidorView main;
+    protected DataOutputStream out;
+    protected DataInputStream in;
+    protected static int qtdClientes;
+    protected static int porta;
 
-    public static void main(String[] args) throws IOException {
-        ServerSocket serverSocket = null;
+    public ServidorTCP(Socket socket, ServidorView main){
+        this.main = main;
+        this.clienteSocket = socket;
         try {
-            Scanner entrada = new Scanner(System.in);
-            System.out.print("Digite a porta: ");
-            int porta = entrada.nextInt();
-            serverSocket = new ServerSocket(porta);
-            System.out.println("Servidor online.");
-            try {
-                while (true) {
-                    System.out.println("Aguardando conexão do cliente...");
-                    new ServidorTCP(serverSocket.accept()); // aceita conexão
-                }
-            } catch (IOException e) {
-                System.err.println("Conexão falhou.");
-                System.exit(1);
-            }
-        } catch (IOException io) {
-            System.err.println("Não foi possível abrir a porta: " + serverSocket.getLocalPort());
-            System.exit(1);
-        } finally {
-            try {
-                serverSocket.close();
-            } catch (IOException e) {
-                System.err.println("Não foi possível fechar a porta.");
-                System.exit(1);
-            }
+            out = new DataOutputStream(clienteSocket.getOutputStream()); // prepara para enviar os dados
+            in = new DataInputStream(this.clienteSocket.getInputStream()); // prepara para receber os dado
+            this.cliente = new Cliente(clienteSocket.getInetAddress().toString(), clienteSocket.getPort(), " ", out);
+        } catch (IOException e) {
+            System.out.println("[SocketThreadIOException]: " + e.getMessage());
         }
     }
-
-    private ServidorTCP(Socket clienteSocket) {
-        this.clienteSocket = clienteSocket; // recebe o cliente
-        start(); // inicia a thread
-    }
-
+    
+    @Override
     public void run() {
-        System.out.println("Nova cliente em Thread Iniciada.");
+        System.out.println("Nova cliente iniciado. Aguardando o login...");
         try {
-
-            DataOutputStream out = new DataOutputStream(clienteSocket.getOutputStream()); // prepara para enviar os dados
-            DataInputStream in = new DataInputStream(this.clienteSocket.getInputStream()); // prepara para receber os dados
-
-            this.cliente = new Cliente(clienteSocket.getInetAddress().toString(), clienteSocket.getPort(), " ", out);
-
             String recebe;
             boolean close = false;
             while ((recebe = in.readUTF()) != null) { // ler dados do cliente

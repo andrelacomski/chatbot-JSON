@@ -3,8 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/lacomski/NetBeansProjects/ServidorTCP/src/models/ClienteTCP.java</file>
-            <file>file:/home/lacomski/NetBeansProjects/ServidorTCP/src/models/Recever.java</file>
+            <file>file:/home/lacomski/NetBeansProjects/ServidorTCP/src/models/ServidorTCP.java</file>
+            <file>file:/home/lacomski/NetBeansProjects/ServidorTCP/src/views/Servidor.java</file>
         </group>
     </open-files>
 </project-private>

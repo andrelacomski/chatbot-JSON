@@ -16,7 +16,7 @@ import models.Cliente;
  *
  * @author lacomski
  */
-public class Home extends javax.swing.JFrame {
+public class HomeView extends javax.swing.JFrame {
 
     private ClienteTCP clientetcp;
     private DefaultListModel model;
@@ -25,7 +25,7 @@ public class Home extends javax.swing.JFrame {
         this.clientetcp = clientetcp;
     }
     
-    public Home(ClienteTCP clientetcp) {
+    public HomeView(ClienteTCP clientetcp) {
         initComponents();
         this.model = new DefaultListModel<>();
         this.lista.setModel(this.model);
@@ -34,7 +34,7 @@ public class Home extends javax.swing.JFrame {
         this.clientetcp = clientetcp;
     }
 
-    private Home() {
+    private HomeView() {
     }
     
     public void preencherLista(ArrayList<Cliente> clientes){
@@ -54,7 +54,7 @@ public class Home extends javax.swing.JFrame {
         iMensagem = new javax.swing.JTextArea();
         bEnviarMensagem = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        lista = new javax.swing.JList<>();
+        lista = new javax.swing.JList<String>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -78,10 +78,10 @@ public class Home extends javax.swing.JFrame {
             }
         });
 
-        lista.setModel(new javax.swing.AbstractListModel<String>() {
+        lista.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
+            public Object getElementAt(int i) { return strings[i]; }
         });
         jScrollPane2.setViewportView(lista);
 
@@ -150,7 +150,7 @@ public class Home extends javax.swing.JFrame {
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, "Falha ao desconectar");
         }
-        LoginCliente login = new LoginCliente();
+        LoginView login = new LoginView();
         login.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_bDesconectarMouseClicked
@@ -163,7 +163,7 @@ public class Home extends javax.swing.JFrame {
         
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Home().setVisible(true);
+                new HomeView().setVisible(true);
             }
         });
     }

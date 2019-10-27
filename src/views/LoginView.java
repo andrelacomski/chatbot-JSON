@@ -7,13 +7,13 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import models.Cliente;
 import models.ClienteTCP;
-public class LoginCliente extends javax.swing.JFrame {
+public class LoginView extends javax.swing.JFrame {
 
     private ClienteTCP clientetcp;
     private Cliente cliente;
 
     
-    public LoginCliente() {
+    public LoginView() {
         initComponents();
         this.setLocationRelativeTo(null);
         this.setTitle("Login");
@@ -39,6 +39,8 @@ public class LoginCliente extends javax.swing.JFrame {
         painel.setForeground(new java.awt.Color(60, 63, 65));
 
         iAddress.setToolTipText("");
+
+        iPort.setText("22000");
 
         bLogin.setText("Entrar");
         bLogin.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -159,14 +161,14 @@ public class LoginCliente extends javax.swing.JFrame {
 
     private void bLoginMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bLoginMouseClicked
     
-        Home home = new Home(clientetcp);
+        HomeView home = new HomeView(clientetcp);
         
         this.cliente = new Cliente(this.iAddress.getText(), Integer.parseInt(this.iPort.getText()), this.iName.getText(),null);            
         try {
             this.clientetcp = new ClienteTCP(cliente, home);
             home.setClienteTCP(this.clientetcp);
         } catch (IOException ex) {
-            Logger.getLogger(LoginCliente.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LoginView.class.getName()).log(Level.SEVERE, null, ex);
         }
         boolean status = false;
         try {
@@ -198,20 +200,21 @@ public class LoginCliente extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(LoginCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(LoginView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(LoginCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(LoginView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(LoginCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(LoginView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(LoginCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(LoginView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new LoginCliente().setVisible(true);
+                new LoginView().setVisible(true);
             }
         });
     }

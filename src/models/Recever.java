@@ -8,14 +8,14 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import views.Home;
+import views.HomeView;
 
 public class Recever extends Thread {
 
     DataInputStream in;
-    Home home;
+    HomeView home;
 
-    public Recever(DataInputStream in, Home home) {
+    public Recever(DataInputStream in, HomeView home) {
         this.in = in;
         this.home = home;
     }
