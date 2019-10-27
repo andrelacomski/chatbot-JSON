@@ -1,23 +1,34 @@
 package views;
 
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.ArrayList;
+import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
+import models.Cliente;
 import models.Servidor;
-import models.ServidorTCP;
 
 public class ServidorView extends javax.swing.JFrame {
 
     protected Servidor server;
     protected Thread thread;
+    private DefaultListModel model;
     
     public ServidorView() {
         initComponents();
+        this.model = new DefaultListModel<>();
+        this.lista.setModel(this.model);
         this.setTitle("Servidor");
         this.setLocationRelativeTo(null);
         this.bDesliga.setEnabled(false);
     }
+    
+    public void preencheLista(ArrayList<Cliente> clientes){
+        this.model.clear();
+        for(Cliente cliente: clientes){
+            System.out.println(cliente.getNome());
+            this.model.addElement(cliente.getNome());
+        }
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

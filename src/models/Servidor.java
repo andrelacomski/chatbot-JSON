@@ -15,26 +15,26 @@ import views.ServidorView;
  * @author lacomski
  */
 public class Servidor implements Runnable{
-    
+
     protected ServerSocket server;
     protected ServidorView main;
     protected boolean conected = true;
 
     public Servidor(int porta, ServidorView main){
-        System.out.println("Iniciando SERVIDOR...");
+        System.out.println("[SERVIDOR]: Iniciando SERVIDOR...");
         try {
             this.main = main;
             server = new ServerSocket(porta);
             System.out.println("[SERVIDOR]: SERVIDOR Iniciado!");
-        } 
-        catch (IOException e) { 
-            System.out.println("[IOException]: "+ e.getMessage()); 
-        } 
-        catch (Exception e ){ 
-            System.out.println("[Exception]: "+ e.getMessage()); 
+        }
+        catch (IOException e) {
+            System.out.println("[IOException]: "+ e.getMessage());
+        }
+        catch (Exception e ){
+            System.out.println("[Exception]: "+ e.getMessage());
         }
     }
-    
+
    @Override
     public void run() {
         try {
@@ -46,16 +46,16 @@ public class Servidor implements Runnable{
             System.out.println("[ServidorThreadIOException]: "+ e.getMessage());
         }
     }
-    
+
     public void stop(){
         try {
             server.close();
             conected = false;
-            System.out.println("SERVIDOR está FECHADO....!");
+            System.out.println("[SERVIDOR]: SERVIDOR está FECHADO....!");
             System.exit(0);
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
-    
+
 }

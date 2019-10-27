@@ -2,8 +2,10 @@ package models;
 
 import java.io.*;
 import java.net.*;
-import java.util.Scanner;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import views.ServidorView;
@@ -26,13 +28,13 @@ public class ServidorTCP extends Thread {
             in = new DataInputStream(this.clienteSocket.getInputStream()); // prepara para receber os dado
             this.cliente = new Cliente(clienteSocket.getInetAddress().toString(), clienteSocket.getPort(), " ", out);
         } catch (IOException e) {
-            System.out.println("[SocketThreadIOException]: " + e.getMessage());
+            System.out.println("[SERVIDOR]: " + e.getMessage());
         }
     }
-    
+
     @Override
     public void run() {
-        System.out.println("Nova cliente iniciado. Aguardando o login...");
+        System.out.println("[SERVIDOR]: Nova cliente iniciado. Aguardando o login...");
         try {
             String recebe;
             boolean close = false;
@@ -50,18 +52,20 @@ public class ServidorTCP extends Thread {
                         close = true;
                         break;
                 }
-                if (close) {
+                if (close)
                     break;
-                }
             }
 
         } catch (IOException e) {
-            System.out.println("Erro ao desconectar o Cliente: " + this.clienteSocket.getLocalAddress().getHostAddress());
+            System.out.println("[SERVIDOR]: Erro ao desconectar o Cliente: " + this.clienteSocket.getLocalAddress().getHostAddress());
         }
-        System.out.println("Cliente desconectado: " + this.cliente.getNome());
+        System.out.println("[SERVIDOR]: Cliente desconectado: " + this.cliente.getNome());
 
         ListaClientes ctrlCliente = ListaClientes.getInstance();
         ctrlCliente.getClientes().remove(this.cliente);
+
+        ArrayList<Cliente> lista = (ArrayList<Cliente>) ctrlCliente.getClientes();
+        main.preencheLista(lista);
         Gson gson = new Gson();
         System.out.println(gson.toJson(ctrlCliente.getClientes()));
         for (Cliente client : ctrlCliente.getClientes()) {
@@ -78,12 +82,14 @@ public class ServidorTCP extends Thread {
         ListaClientes ctrlCliente = ListaClientes.getInstance();
         ctrlCliente.setClientes(this.cliente);
         qtdClientes = ctrlCliente.qtdClientes();
+        ArrayList<Cliente> lista = (ArrayList<Cliente>) ctrlCliente.getClientes();
+        main.preencheLista(lista);
         Gson gson = new Gson();
         System.out.println(gson.toJson(ctrlCliente.getClientes()));
         for (Cliente client : ctrlCliente.getClientes()) {
             client.saidaCliente.writeUTF(gson.toJson(ctrlCliente.getClientes()));
         }
-        System.out.println("Cliente conectado: " + this.cliente.getNome());
+        System.out.println("[SERVIDOR]: Cliente conectado: " + this.cliente.getNome());
     }
 
 }

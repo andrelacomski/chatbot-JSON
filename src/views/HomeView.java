@@ -1,13 +1,8 @@
 package views;
 
 import models.ClienteTCP;
-import java.awt.Color;
-import java.awt.List;
 import java.io.IOException;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import models.Cliente;

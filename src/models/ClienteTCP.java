@@ -29,7 +29,7 @@ public class ClienteTCP extends Thread {
     }
 
     public boolean conectar() throws IOException {
-        System.out.println("Tentando conexão no host: " + this.cliente.getIp() + ":" + this.cliente.getPorta());
+        System.out.println("[CLIENTE]: Tentando conexão no host: " + this.cliente.getIp() + ":" + this.cliente.getPorta());
         try {
             this.serverSocket = new Socket(this.cliente.getIp(), this.cliente.getPorta());
 
@@ -39,15 +39,15 @@ public class ClienteTCP extends Thread {
             Protocolo protocolo = new Protocolo("login", this.cliente.getNome());
             Gson gson = new Gson();
             out.writeUTF(gson.toJson(protocolo));
-            
+
             return true;
-            
+
         } catch (UnknownHostException e) {
-            System.out.println("Este host não existe: " + this.cliente.getIp());
+            System.out.println("[CLIENTE]: Este host não existe: " + this.cliente.getIp());
             return false;
         } catch (IOException io) {
             System.out.println(io.toString());
-            System.out.println("Não foi possível obter I/O para o server: " + this.cliente.getIp());
+            System.out.println("[CLIENTE]: Não foi possível obter I/O para o server: " + this.cliente.getIp());
             return false;
         }
 
@@ -61,12 +61,12 @@ public class ClienteTCP extends Thread {
         this.out.close();
         this.in.close();
         this.serverSocket.close();
-        System.out.println("Desconectado.");
+        System.out.println("[CLIENTE]: Desconectado.");
         return true;
     }
 
     public boolean enviarMensagem() throws IOException {
-        System.out.println("Entrada de dados: " + this.getMensagem());
+        System.out.println("[CLIENTE]: Entrada de dados: " + this.getMensagem());
         Cliente cliente = new Cliente("", 20000, "", null);
         Gson gson = new Gson();
 
