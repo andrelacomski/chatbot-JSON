@@ -1,13 +1,9 @@
 package models;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import views.HomeView;
 
 public class Recever extends Thread {
@@ -28,11 +24,8 @@ public class Recever extends Thread {
             while ((recebe = this.in.readUTF()) != null) { // ler dados do cliente
                 
                 System.out.println(recebe);
-                Type listType = new TypeToken<ArrayList<Cliente>>() {
-                }.getType();
-                ArrayList<Cliente> lista = new Gson().fromJson(recebe, listType);
-                
-                home.preencherLista(lista);
+                ListaClientes lista = new Gson().fromJson(recebe, ListaClientes.class);
+                home.preencherLista((ArrayList<Cliente>) lista.getClientes());
                         
                 if (close) {
                     break;

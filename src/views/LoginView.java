@@ -9,7 +9,7 @@ import models.Cliente;
 import models.ClienteTCP;
 public class LoginView extends javax.swing.JFrame {
 
-    private ClienteTCP clientetcp;
+    static ClienteTCP clientetcp;
     private Cliente cliente;
 
     

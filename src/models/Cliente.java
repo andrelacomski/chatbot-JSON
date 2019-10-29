@@ -12,7 +12,7 @@ public class Cliente {
     public int porta;
     public String nome;
     public String ip;
-    public boolean status;
+//    public boolean status;
 
     public transient DataOutputStream saidaCliente;
 
@@ -34,7 +34,7 @@ public class Cliente {
         this.nome = nome;
         this.ip = ip;
         this.porta = porta;
-        this.status = status;
+//        this.status = status;
     }
 
     public String getIp() {
@@ -49,9 +49,9 @@ public class Cliente {
         return this.porta;
     }
 
-    public boolean getStatus() {
-        return this.status;
-    }
+//    public boolean getStatus() {
+//        return this.status;
+//    }
 
     public void setIp(String ip) {
         this.ip = ip;
@@ -65,13 +65,13 @@ public class Cliente {
         this.porta = porta;
     }
 
-    public void setStatus(boolean status) {
-        this.status = status;
-    }
-
-    public boolean isStatus() {
-        return status;
-    }
+//    public void setStatus(boolean status) {
+//        this.status = status;
+//    }
+//
+//    public boolean isStatus() {
+//        return status;
+//    }
 
     public DataOutputStream getSaidaCliente() {
         return saidaCliente;

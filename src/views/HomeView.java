@@ -49,7 +49,7 @@ public class HomeView extends javax.swing.JFrame {
         iMensagem = new javax.swing.JTextArea();
         bEnviarMensagem = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        lista = new javax.swing.JList<String>();
+        lista = new javax.swing.JList<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -73,10 +73,10 @@ public class HomeView extends javax.swing.JFrame {
             }
         });
 
-        lista.setModel(new javax.swing.AbstractListModel() {
+        lista.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
+            public String getElementAt(int i) { return strings[i]; }
         });
         jScrollPane2.setViewportView(lista);
 
@@ -134,8 +134,9 @@ public class HomeView extends javax.swing.JFrame {
         } catch (IOException ex) {
             this.iMensagem.setText("ERRO: " + ex);
         }
-        if(retorno)
-        this.iMensagem.setText(this.clientetcp.getMensagem());
+        if (retorno) {
+            this.iMensagem.setText(this.clientetcp.getMensagem());
+        }
 
     }//GEN-LAST:event_bEnviarMensagemMouseClicked
 
@@ -155,7 +156,6 @@ public class HomeView extends javax.swing.JFrame {
      */
     public static void main(String args[]) {
 
-        
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new HomeView().setVisible(true);

@@ -48,7 +48,7 @@ public class ServidorTCP extends Thread {
                         out.close();
                         in.close();
                         clienteSocket.close();
-                        cliente.setStatus(false);
+//                        cliente.setStatus(false);
                         close = true;
                         break;
                 }
@@ -85,9 +85,9 @@ public class ServidorTCP extends Thread {
         ArrayList<Cliente> lista = (ArrayList<Cliente>) ctrlCliente.getClientes();
         main.preencheLista(lista);
         Gson gson = new Gson();
-        System.out.println(gson.toJson(ctrlCliente.getClientes()));
+        System.out.println(gson.toJson(ctrlCliente));
         for (Cliente client : ctrlCliente.getClientes()) {
-            client.saidaCliente.writeUTF(gson.toJson(ctrlCliente.getClientes()));
+            client.saidaCliente.writeUTF(gson.toJson(ctrlCliente));
         }
         System.out.println("[SERVIDOR]: Cliente conectado: " + this.cliente.getNome());
     }
