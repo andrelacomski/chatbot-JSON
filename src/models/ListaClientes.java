@@ -15,10 +15,8 @@ public class ListaClientes {
     }
  
     public static synchronized ListaClientes getInstance() {
-        if (uniqueInstance == null){
+        if (uniqueInstance == null)
             uniqueInstance = new ListaClientes();
-        }
- 
         return uniqueInstance;
     }
     
@@ -29,6 +27,11 @@ public class ListaClientes {
     public List<Cliente> getClientes(){
         return this.clientes;
     }
+
+    public String getAction() {
+        return action;
+    }
+    
     public void setClientes(Cliente cliente){
         this.clientes.add(cliente);
     }

@@ -22,17 +22,23 @@ public class Recever extends Thread {
         boolean close = false;
         try {
             while ((recebe = this.in.readUTF()) != null) { // ler dados do cliente
-                
                 System.out.println(recebe);
                 ListaClientes lista = new Gson().fromJson(recebe, ListaClientes.class);
-                home.preencherLista((ArrayList<Cliente>) lista.getClientes());
-                        
-                if (close) {
-                    break;
+                switch(lista.getAction()){
+                    case "listarUsuarios":
+                        home.preencherListaOnline((ArrayList<Cliente>) lista.getClientes());
+                        break;
+                    case "listarServicos":
+                        break;
+                    case "broadcast":
+                        break;
                 }
+                
+                if (close)
+                    break;             
             }
         } catch (IOException ex) {
-//            Logger.getLogger(Recever.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println(ex.getMessage());
         }
     }
 }

@@ -39,7 +39,6 @@ public class ClienteTCP extends Thread {
             Protocolo protocolo = new Protocolo("login", this.cliente.getNome());
             Gson gson = new Gson();
             out.writeUTF(gson.toJson(protocolo));
-
             return true;
 
         } catch (UnknownHostException e) {
@@ -50,9 +49,7 @@ public class ClienteTCP extends Thread {
             System.out.println("[CLIENTE]: Não foi possível obter I/O para o server: " + this.cliente.getIp());
             return false;
         }
-
      }
-
 
     public boolean desconectar() throws IOException {
         Protocolo protocolo = new Protocolo("logout");
@@ -66,13 +63,11 @@ public class ClienteTCP extends Thread {
     }
 
     public boolean enviarMensagem() throws IOException {
-        System.out.println("[CLIENTE]: Entrada de dados: " + this.getMensagem());
-        Cliente cliente = new Cliente("", 20000, "", null);
+        System.out.println("[CLIENTE]: Enviando mensagem: " + this.getMensagem());
+        Protocolo protocolo = new Protocolo("broadcast");
+        protocolo.setMensagem(this.getMensagem());
         Gson gson = new Gson();
-
-        out.writeUTF(gson.toJson(cliente));
-        String retorno = this.getMensagem() + " " + this.in.readUTF();
-        this.setMensagem(retorno);
+        out.writeUTF(gson.toJson(protocolo));
         return true;
     }
 

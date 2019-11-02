@@ -20,11 +20,11 @@ public class ListaServicos {
         return uniqueInstance;
     }
 
-    public List<Servico> getClientes() {
+    public List<Servico> getServicos() {
         return this.servicos;
     }
 
-    public void setClientes(Servico servico) {
+    public void setServicos(Servico servico) {
         this.servicos.add(servico);
     }
 }

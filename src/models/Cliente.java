@@ -2,18 +2,11 @@ package models;
 
 import java.io.DataOutputStream;
 
-/**
- *
- * @author lacomski
- */
-
 public class Cliente {
 
     public int porta;
     public String nome;
     public String ip;
-//    public boolean status;
-
     public transient DataOutputStream saidaCliente;
 
     public void setSaidaCliente(DataOutputStream saidaCliente) {
@@ -64,14 +57,6 @@ public class Cliente {
     public void setPorta(int porta) {
         this.porta = porta;
     }
-
-//    public void setStatus(boolean status) {
-//        this.status = status;
-//    }
-//
-//    public boolean isStatus() {
-//        return status;
-//    }
 
     public DataOutputStream getSaidaCliente() {
         return saidaCliente;

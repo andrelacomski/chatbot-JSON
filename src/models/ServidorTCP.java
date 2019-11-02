@@ -3,8 +3,6 @@ package models;
 import java.io.*;
 import java.net.*;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,8 +46,13 @@ public class ServidorTCP extends Thread {
                         out.close();
                         in.close();
                         clienteSocket.close();
-//                        cliente.setStatus(false);
                         close = true;
+                        break;
+                    case "broadcast":
+                        this.broadcast(protocolo, out);
+                        break;
+                    case "cadastrarServico":
+                        this.cadastrarServico(protocolo, out);
                         break;
                 }
                 if (close)
@@ -63,14 +66,13 @@ public class ServidorTCP extends Thread {
 
         ListaClientes ctrlCliente = ListaClientes.getInstance();
         ctrlCliente.getClientes().remove(this.cliente);
-
         ArrayList<Cliente> lista = (ArrayList<Cliente>) ctrlCliente.getClientes();
-        main.preencheLista(lista);
+        main.preencheListaOnline(lista);
         Gson gson = new Gson();
         System.out.println(gson.toJson(ctrlCliente.getClientes()));
         for (Cliente client : ctrlCliente.getClientes()) {
             try {
-                client.saidaCliente.writeUTF(gson.toJson(ctrlCliente.getClientes()));
+                client.saidaCliente.writeUTF(gson.toJson(ctrlCliente));
             } catch (IOException ex) {
                 Logger.getLogger(ServidorTCP.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -83,13 +85,21 @@ public class ServidorTCP extends Thread {
         ctrlCliente.setClientes(this.cliente);
         qtdClientes = ctrlCliente.qtdClientes();
         ArrayList<Cliente> lista = (ArrayList<Cliente>) ctrlCliente.getClientes();
-        main.preencheLista(lista);
+        main.preencheListaOnline(lista);
         Gson gson = new Gson();
         System.out.println(gson.toJson(ctrlCliente));
         for (Cliente client : ctrlCliente.getClientes()) {
             client.saidaCliente.writeUTF(gson.toJson(ctrlCliente));
         }
         System.out.println("[SERVIDOR]: Cliente conectado: " + this.cliente.getNome());
+    }
+    
+    public void broadcast(Protocolo protocolo, DataOutputStream out){
+        System.out.println("[" + cliente.getNome() + "]: " + protocolo.getMensagem());
+    }
+
+    public void cadastrarServico(Protocolo protocolo, DataOutputStream out){
+        
     }
 
 }
