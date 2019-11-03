@@ -8,7 +8,6 @@ import java.util.List;
 public class ListaClientes {
  
     private static ListaClientes uniqueInstance;
-    private final String action = "listarUsuarios"; 
     private final List<Cliente> clientes = new ArrayList<>();
     
     private ListaClientes() {
@@ -26,10 +25,6 @@ public class ListaClientes {
     
     public List<Cliente> getClientes(){
         return this.clientes;
-    }
-
-    public String getAction() {
-        return action;
     }
     
     public void setClientes(Cliente cliente){

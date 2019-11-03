@@ -6,12 +6,14 @@ import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import models.Cliente;
+import models.Servico;
 
 public class HomeView extends javax.swing.JFrame {
 
     private ClienteTCP clientetcp;
     private DefaultListModel modelOnline;
     private DefaultListModel modelServicos;
+    private DefaultListModel modelChat;
     
     public void setClienteTCP(ClienteTCP clientetcp){
         this.clientetcp = clientetcp;
@@ -23,6 +25,9 @@ public class HomeView extends javax.swing.JFrame {
         this.listaOnline.setModel(this.modelOnline);
         this.modelServicos = new DefaultListModel<>();
         this.listaServicos.setModel(this.modelServicos);
+        this.modelChat = new DefaultListModel<>();
+        this.listaChat.setModel(this.modelChat);
+        this.modelChat.clear();
         this.setLocationRelativeTo(null);
         this.setTitle("Dashboard");
         this.clientetcp = clientetcp;
@@ -39,12 +44,17 @@ public class HomeView extends javax.swing.JFrame {
         }
     }
 
-    public void preencherListaServicos(ArrayList<Cliente> clientes){
+    public void preencherListaServicos(ArrayList<Servico> servicos){
         this.modelServicos.clear();
-        for(Cliente cliente: clientes){
-            this.modelServicos.addElement(cliente.getNome());
+        for(Servico servico: servicos){
+            this.modelServicos.addElement(servico.getCargo());
         }
     }
+    
+    public void preencherListaChat(String mensagem){
+        this.modelChat.addElement(mensagem);
+    }
+    
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -59,11 +69,11 @@ public class HomeView extends javax.swing.JFrame {
         listaOnline = new javax.swing.JList<String>();
         tOnline = new javax.swing.JLabel();
         tServicos = new javax.swing.JLabel();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        iGlobal = new javax.swing.JTextArea();
         jLabel3 = new javax.swing.JLabel();
         bCadastrar = new javax.swing.JButton();
         iMensagem = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        listaChat = new javax.swing.JList();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -101,10 +111,6 @@ public class HomeView extends javax.swing.JFrame {
 
         tServicos.setText("Lista Serviços");
 
-        iGlobal.setColumns(20);
-        iGlobal.setRows(5);
-        jScrollPane4.setViewportView(iGlobal);
-
         jLabel3.setText("Chat Global");
 
         bCadastrar.setText("CADASTRAR SERVIÇO");
@@ -114,7 +120,12 @@ public class HomeView extends javax.swing.JFrame {
             }
         });
 
-        iMensagem.setText("jTextField1");
+        listaChat.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public Object getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane1.setViewportView(listaChat);
 
         javax.swing.GroupLayout painelLayout = new javax.swing.GroupLayout(painel);
         painel.setLayout(painelLayout);
@@ -147,11 +158,10 @@ public class HomeView extends javax.swing.JFrame {
                         .addComponent(jLabel3)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(painelLayout.createSequentialGroup()
+                        .addGap(6, 6, 6)
                         .addGroup(painelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane4)
-                            .addGroup(painelLayout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(iMensagem)))
+                            .addComponent(iMensagem)
+                            .addComponent(jScrollPane1))
                         .addContainerGap())))
         );
         painelLayout.setVerticalGroup(
@@ -160,7 +170,7 @@ public class HomeView extends javax.swing.JFrame {
                 .addContainerGap(20, Short.MAX_VALUE)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(iMensagem, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(3, 3, 3)
@@ -235,12 +245,12 @@ public class HomeView extends javax.swing.JFrame {
     private javax.swing.JButton bCadastrar;
     private javax.swing.JButton bDesconectar;
     private javax.swing.JButton bEnviarMensagem;
-    private javax.swing.JTextArea iGlobal;
     private javax.swing.JTextField iMensagem;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JList listaChat;
     private javax.swing.JList<String> listaOnline;
     private javax.swing.JList<String> listaServicos;
     private javax.swing.JPanel painel;

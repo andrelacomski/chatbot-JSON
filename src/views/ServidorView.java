@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import models.Cliente;
+import models.Servico;
 import models.Servidor;
 
 public class ServidorView extends javax.swing.JFrame {
@@ -22,6 +23,7 @@ public class ServidorView extends javax.swing.JFrame {
         this.listaServicos.setModel(this.modelServicos);
         this.modelChatGlobal = new DefaultListModel<>();
         this.listaMensagem.setModel(this.modelChatGlobal);
+        this.modelChatGlobal.clear();
         this.setTitle("Servidor");
         this.setLocationRelativeTo(null);
         this.bDesliga.setEnabled(false);
@@ -35,20 +37,16 @@ public class ServidorView extends javax.swing.JFrame {
         }
     }
     
-    public void preencheListaServicos(ArrayList<Cliente> clientes){
+    public void preencheListaServicos(ArrayList<Servico> servicos){
         this.modelServicos.clear();
-        for(Cliente cliente: clientes){
-            System.out.println(cliente.getNome());
-            this.modelServicos.addElement(cliente.getNome());
+        for(Servico servico: servicos){
+            System.out.println(servico.getCargo());
+            this.modelServicos.addElement(servico.getCargo());
         }
     }
     
-    public void preencheListaChatGlobal(ArrayList<Cliente> clientes){
-        this.modelChatGlobal.clear();
-        for(Cliente cliente: clientes){
-            System.out.println(cliente.getNome());
-            this.modelChatGlobal.addElement(cliente.getNome());
-        }
+    public void preencheListaChatGlobal(String mensagem){
+        this.modelChatGlobal.addElement(mensagem);
     }
     
     @SuppressWarnings("unchecked")

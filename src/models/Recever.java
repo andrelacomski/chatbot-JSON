@@ -23,14 +23,16 @@ public class Recever extends Thread {
         try {
             while ((recebe = this.in.readUTF()) != null) { // ler dados do cliente
                 System.out.println(recebe);
-                ListaClientes lista = new Gson().fromJson(recebe, ListaClientes.class);
-                switch(lista.getAction()){
+                Protocolo protocolo = new Gson().fromJson(recebe, Protocolo.class);
+                switch(protocolo.getAction()){
                     case "listarUsuarios":
-                        home.preencherListaOnline((ArrayList<Cliente>) lista.getClientes());
+                        home.preencherListaOnline((ArrayList<Cliente>) protocolo.getClientes());
                         break;
                     case "listarServicos":
+                        home.preencherListaServicos((ArrayList<Servico>) protocolo.getServicos());
                         break;
                     case "broadcast":
+                        home.preencherListaChat(protocolo.getMensagem());
                         break;
                 }
                 

@@ -40,6 +40,7 @@ public class ServidorTCP extends Thread {
                 Protocolo protocolo = new Gson().fromJson(recebe, Protocolo.class);
                 switch (protocolo.getAction()) {
                     case "login":
+                        this.cliente.setNome(protocolo.getNome());
                         this.login(protocolo, out);
                         break;
                     case "logout":
@@ -62,39 +63,55 @@ public class ServidorTCP extends Thread {
         } catch (IOException e) {
             System.out.println("[SERVIDOR]: Erro ao desconectar o Cliente: " + this.clienteSocket.getLocalAddress().getHostAddress());
         }
-        System.out.println("[SERVIDOR]: Cliente desconectado: " + this.cliente.getNome());
 
         ListaClientes ctrlCliente = ListaClientes.getInstance();
-        ctrlCliente.getClientes().remove(this.cliente);
-        ArrayList<Cliente> lista = (ArrayList<Cliente>) ctrlCliente.getClientes();
-        main.preencheListaOnline(lista);
         Gson gson = new Gson();
-        System.out.println(gson.toJson(ctrlCliente.getClientes()));
+        Protocolo envio = new Protocolo("listarUsuarios");
+        
+        ctrlCliente.getClientes().remove(this.cliente);
+        envio.setClientes((ArrayList<Cliente>) ctrlCliente.getClientes());
+        main.preencheListaOnline((ArrayList<Cliente>) ctrlCliente.getClientes());
+        
         for (Cliente client : ctrlCliente.getClientes()) {
             try {
-                client.saidaCliente.writeUTF(gson.toJson(ctrlCliente));
+                client.saidaCliente.writeUTF(gson.toJson(envio));
             } catch (IOException ex) {
                 Logger.getLogger(ServidorTCP.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        
+        System.out.println("[ONLINES]: " + gson.toJson(ctrlCliente.getClientes()));
+        System.out.println("[SERVIDOR]: Cliente desconectado: " + this.cliente.getNome());
     }
 
     public void login(Protocolo protocolo, DataOutputStream out) throws IOException {
-        this.cliente.setNome(protocolo.getNome());
         ListaClientes ctrlCliente = ListaClientes.getInstance();
-        ctrlCliente.setClientes(this.cliente);
-        qtdClientes = ctrlCliente.qtdClientes();
-        ArrayList<Cliente> lista = (ArrayList<Cliente>) ctrlCliente.getClientes();
-        main.preencheListaOnline(lista);
         Gson gson = new Gson();
-        System.out.println(gson.toJson(ctrlCliente));
-        for (Cliente client : ctrlCliente.getClientes()) {
-            client.saidaCliente.writeUTF(gson.toJson(ctrlCliente));
-        }
+        Protocolo envio = new Protocolo("listarUsuarios");
+        
+        ctrlCliente.setClientes(this.cliente);
+        envio.setClientes((ArrayList<Cliente>) ctrlCliente.getClientes());
+        main.preencheListaOnline((ArrayList<Cliente>) ctrlCliente.getClientes());
+       
+        for (Cliente client : ctrlCliente.getClientes())
+            client.saidaCliente.writeUTF(gson.toJson(envio));
+        
+        System.out.println("[ONLINES]: " + gson.toJson(ctrlCliente));
         System.out.println("[SERVIDOR]: Cliente conectado: " + this.cliente.getNome());
     }
     
-    public void broadcast(Protocolo protocolo, DataOutputStream out){
+    public void broadcast(Protocolo protocolo, DataOutputStream out) throws IOException{
+        ListaClientes ctrlCliente = ListaClientes.getInstance();
+        Protocolo envio = new Protocolo("broadcast");
+        Gson gson = new Gson();
+        String mensagem = "[" + cliente.getNome() + "]: " + protocolo.getMensagem();
+        
+        envio.setMensagem(mensagem);
+        main.preencheListaChatGlobal(mensagem);
+        
+        for (Cliente client : ctrlCliente.getClientes())
+            client.saidaCliente.writeUTF(gson.toJson(envio));       
+        
         System.out.println("[" + cliente.getNome() + "]: " + protocolo.getMensagem());
     }
 
