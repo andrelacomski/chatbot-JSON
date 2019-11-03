@@ -7,6 +7,12 @@ public class Servico {
     private float salario;
     private Cliente empregador;
 
+    public Servico(String cargo, String descricao, float salario){
+        this.cargo = cargo;
+        this.descricao = descricao;
+        this.salario = salario;
+    }
+    
     public Servico(String cargo, String descricao, float salario, Cliente empregador) {
         this.cargo = cargo;
         this.descricao = descricao;

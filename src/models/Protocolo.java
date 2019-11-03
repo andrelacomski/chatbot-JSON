@@ -1,14 +1,14 @@
 package models;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Protocolo {
     private String action;
     private String nome;
     private String mensagem;
-    private List <Cliente> clientes = new ArrayList<>();
-    private List <Servico> servicos = new ArrayList<>();
+    private Servico servico;
+    private List <Cliente> usuarios;
+    private List <Servico> servicos;
 
     public Protocolo(String action){
         this.action = action;
@@ -23,12 +23,20 @@ public class Protocolo {
         this.action = action;
     }
 
+    public void setServico(Servico servico) {
+        this.servico = servico;
+    }
+
     public void setNome(String nome) {
         this.nome = nome;
     }
 
     public void setMensagem(String mensagem) {
         this.mensagem = mensagem;
+    }
+
+    public Servico getServico() {
+        return servico;
     }
 
     public String getAction() {
@@ -44,11 +52,11 @@ public class Protocolo {
     }
     
     public List<Cliente> getClientes(){
-        return this.clientes;
+        return this.usuarios;
     }
     
     public void setClientes(List<Cliente> clientes){
-        this.clientes = clientes;
+        this.usuarios = clientes;
     }
 
     public List<Servico> getServicos(){
@@ -58,5 +66,4 @@ public class Protocolo {
     public void setServicos(List<Servico> servicos){
         this.servicos = servicos;
     }
-
 }

@@ -153,15 +153,17 @@ public class HomeView extends javax.swing.JFrame {
                                         .addComponent(bCadastrar, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addComponent(bDesconectar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addContainerGap())))
-                    .addComponent(bEnviarMensagem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(painelLayout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(painelLayout.createSequentialGroup()
-                        .addGap(6, 6, 6)
                         .addGroup(painelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(iMensagem)
-                            .addComponent(jScrollPane1))
+                            .addComponent(bEnviarMensagem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(painelLayout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addGroup(painelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(iMensagem)
+                                    .addComponent(jScrollPane1))))
                         .addContainerGap())))
         );
         painelLayout.setVerticalGroup(
@@ -218,7 +220,7 @@ public class HomeView extends javax.swing.JFrame {
         try {
             this.clientetcp.desconectar();
         } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "Falha ao desconectar");
+            JOptionPane.showMessageDialog(null, "Falha ao desconectar: " + ex.getMessage());
         }
         LoginView login = new LoginView();
         login.setVisible(true);
@@ -226,12 +228,10 @@ public class HomeView extends javax.swing.JFrame {
     }//GEN-LAST:event_bDesconectarMouseClicked
 
     private void bCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCadastrarActionPerformed
-        // TODO add your handling code here:
+        CadastrarServicoView cadastrarView= new  CadastrarServicoView(clientetcp);
+        cadastrarView.setVisible(true);
     }//GEN-LAST:event_bCadastrarActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String args[]) {
 
         java.awt.EventQueue.invokeLater(new Runnable() {

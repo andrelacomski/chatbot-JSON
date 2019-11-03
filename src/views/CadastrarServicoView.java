@@ -1,13 +1,27 @@
 package views;
 
+import models.Cliente;
+import models.ClienteTCP;
+import models.Servico;
+
 public class CadastrarServicoView extends javax.swing.JFrame {
 
+    protected ClienteTCP clientetcp;
+    protected Cliente cliente;
+    
     public CadastrarServicoView() {
         initComponents();
         this.setTitle("Cadastrar Serviço");
         this.setLocationRelativeTo(null);
     }
 
+    public CadastrarServicoView(ClienteTCP clientetcp){
+        initComponents();
+        this.setTitle("Cadastrar Serviço");
+        this.setLocationRelativeTo(null);
+        this.clientetcp = clientetcp;
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -28,6 +42,11 @@ public class CadastrarServicoView extends javax.swing.JFrame {
         jScrollPane1.setViewportView(iDescricao);
 
         bCadastrar.setText("CADASTRAR SERVIÇO");
+        bCadastrar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                bCadastrarMouseClicked(evt);
+            }
+        });
 
         tCargo.setText("Cargo:");
 
@@ -77,6 +96,12 @@ public class CadastrarServicoView extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void bCadastrarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bCadastrarMouseClicked
+        Servico servico = new Servico(iCargo.getText(), iDescricao.getText(), Float.parseFloat(iSalario.getText()));
+        clientetcp.cadastrarServico(servico);
+        this.dispose();
+    }//GEN-LAST:event_bCadastrarMouseClicked
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {

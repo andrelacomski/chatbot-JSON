@@ -17,9 +17,16 @@ public class ClienteTCP extends Thread {
     public ClienteTCP(Cliente cliente, HomeView home) throws IOException {
         this.cliente = cliente;
         this.home = home;
-        //conectar();
     }
 
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+    
     public void setMensagem(String mensagem) {
         this.mensagem = mensagem;
     }
@@ -52,25 +59,46 @@ public class ClienteTCP extends Thread {
      }
 
     public boolean desconectar() throws IOException {
-        Protocolo protocolo = new Protocolo("logout");
-        Gson gson = new Gson();
-        out.writeUTF(gson.toJson(protocolo));
-        this.out.close();
-        this.in.close();
-        this.serverSocket.close();
+        try{
+            Protocolo protocolo = new Protocolo("logout");
+            Gson gson = new Gson();
+            out.writeUTF(gson.toJson(protocolo));
+            this.out.close();
+            this.in.close();
+            this.serverSocket.close();            
+        } catch(IOException ex){
+            System.out.println("[CLIENTE]: Problema para desconectar. " + ex.getMessage());
+        }
         System.out.println("[CLIENTE]: Desconectado.");
         return true;
     }
 
     public boolean enviarMensagem() throws IOException {
-        System.out.println("[CLIENTE]: Enviando mensagem: " + this.getMensagem());
-        Protocolo protocolo = new Protocolo("broadcast");
-        protocolo.setMensagem(this.getMensagem());
-        Gson gson = new Gson();
-        out.writeUTF(gson.toJson(protocolo));
+        try{
+            System.out.println("[CLIENTE]: Enviando mensagem: " + this.getMensagem());
+            Protocolo protocolo = new Protocolo("broadcast");
+            protocolo.setMensagem(this.getMensagem());
+            Gson gson = new Gson();
+            out.writeUTF(gson.toJson(protocolo));
+        } catch(IOException ex){
+            System.out.println("[CLIENTE]: Problema ao enviar mensagem. " + ex.getMessage());
+        }
         return true;
     }
 
+    public boolean cadastrarServico(Servico servico) throws IOException{
+        try{
+            System.out.println("[CLIENTE]: Cadastrando serviço: " + servico.getCargo());
+            Protocolo protocolo = new Protocolo("cadastrarServico");
+            protocolo.setServico(servico);
+            Gson gson = new Gson();
+            out.writeUTF(gson.toJson(protocolo));            
+        } catch(IOException ex){
+            System.out.println("[CLIENTE]: Problema para cadastrar serviço. " + ex.getMessage());
+        }
+        return true;
+    }
+    
     public static void main(String[] args) throws IOException {
     }
 }
