@@ -39,7 +39,7 @@ public class ServidorTCP extends Thread {
                 switch (protocolo.getAction()) {
                     case "login":
                         this.cliente.setNome(protocolo.getNome());
-                        this.cliente.setTipo(protocolo.getTipo());
+                      //  this.cliente.setTipo(protocolo.getTipo());
                         this.login(protocolo, out);
                         break;
                     case "logout":
@@ -53,6 +53,7 @@ public class ServidorTCP extends Thread {
                         this.broadcast(protocolo, out);
                         break;
                     case "cadastrarServico":
+                        protocolo.getServico().setEmpregador(cliente);
                         this.cadastrarServico(protocolo, out);
                         break;
                 }
@@ -72,7 +73,7 @@ public class ServidorTCP extends Thread {
         Protocolo envioUsuarios = new Protocolo("listarUsuarios");
         Protocolo envioServicos = new Protocolo("listarServicos");        
 
-        this.cliente.setTipo(null);
+     //   this.cliente.setTipo(null);
         ctrlCliente.setClientes(this.cliente);
         envioUsuarios.setClientes((ArrayList<Cliente>) ctrlCliente.getClientes());
         main.preencheListaOnline((ArrayList<Cliente>) ctrlCliente.getClientes());
@@ -85,7 +86,7 @@ public class ServidorTCP extends Thread {
         }
     
         System.out.println("[ONLINES]: " + gson.toJson(ctrlCliente));
-        System.out.println("[SERVIÇOS]: " + protocolo.getServicos());
+        System.out.println("[SERVIÇOS]: " + gson.toJson(ctrlServico));
         System.out.println("[SERVIDOR]: Cliente conectado: " + this.cliente.getNome());
     }
     
@@ -126,9 +127,7 @@ public class ServidorTCP extends Thread {
         ListaClientes ctrlCliente = ListaClientes.getInstance();
         Gson gson = new Gson();
         Protocolo envio = new Protocolo("listarServicos");        
-        Servico servico = new Servico(protocolo.getServico().getCargo(), protocolo.getServico().getDescricao(), protocolo.getServico().getSalario(), this.cliente);
-        
-        protocolo.setServico(servico);
+
         ctrlServico.setServicos(protocolo.getServico());
         envio.setServicos((ArrayList<Servico>) ctrlServico.getServicos());
         main.preencheListaServicos((ArrayList<Servico>) ctrlServico.getServicos());
@@ -136,9 +135,9 @@ public class ServidorTCP extends Thread {
         for (Cliente client : ctrlCliente.getClientes())
             client.saidaCliente.writeUTF(gson.toJson(envio));
     
-        
+
         System.out.println("[ONLINES]: " + gson.toJson(ctrlCliente.getClientes()));
-        System.out.println("[SERVIÇOS]: " + protocolo.getServicos());
+        System.out.println("[SERVIÇOS]: " + gson.toJson(ctrlServico.getServicos()));
         System.out.println("[SERVIDOR]: " + protocolo.getServico().getCargo());
     }
 }

@@ -26,7 +26,7 @@ public class HomeView extends javax.swing.JFrame {
         initComponents();
         this.modelOnline = new DefaultListModel<>();
         this.listaOnline.setModel(this.modelOnline);
-        this.listaServicos = new JTable(modelServicos);
+        this.modelServicos = (DefaultTableModel) this.listaServicos.getModel();
         this.modelChat = new DefaultListModel<>();
         this.listaChat.setModel(this.modelChat);
         this.modelChat.clear();
@@ -48,6 +48,9 @@ public class HomeView extends javax.swing.JFrame {
 
     public void preencherListaServicos(ArrayList<Servico> servicos){
         for(Servico servico: servicos){
+            if(servico == null) return;
+            System.out.println(servico.getCargo() + " " + servico.getSalario() + " " + servico.getDescricao());
+            System.out.println(servico.getEmpregador().getNome());
             this.modelServicos.addRow(new Object[]{servico.getCargo(), servico.getSalario(), servico.getEmpregador().getNome(), servico.getDescricao()});
         }
     }
@@ -138,10 +141,7 @@ public class HomeView extends javax.swing.JFrame {
 
         listaServicos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
                 "Vaga", "Salário", "Empregador", "Descrição"

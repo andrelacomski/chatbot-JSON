@@ -5,12 +5,13 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import jdk.nashorn.internal.objects.NativeArray;
 import views.HomeView;
 
 public class Recever extends Thread {
 
-    DataInputStream in;
-    HomeView home;
+    private final DataInputStream in;
+    private final HomeView home;
 
     public Recever(DataInputStream in, HomeView home) {
         this.in = in;
@@ -25,15 +26,16 @@ public class Recever extends Thread {
             while ((recebe = this.in.readUTF()) != null) { // ler dados do cliente
                 System.out.println(recebe);
                 Protocolo protocolo = new Gson().fromJson(recebe, Protocolo.class);
+                Gson gson = new Gson();
                 switch(protocolo.getAction()){
                     case "listarUsuarios":
-                        home.preencherListaOnline((ArrayList<Cliente>) protocolo.getClientes());
+                        this.home.preencherListaOnline((ArrayList<Cliente>) protocolo.getClientes());
                         break;
                     case "listarServicos":
-                        home.preencherListaServicos((ArrayList<Servico>) protocolo.getServicos());
+                        this.home.preencherListaServicos((ArrayList<Servico>) protocolo.getServicos());
                         break;
                     case "broadcast":
-                        home.preencherListaChat(protocolo.getMensagem());
+                        this.home.preencherListaChat(protocolo.getMensagem());
                         break;
                 }
                 
