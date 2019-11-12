@@ -7,6 +7,7 @@ public class Protocolo {
     private String nome;
     private String mensagem;
     private Servico servico;
+    private String tipo;
     private List <Cliente> usuarios;
     private List <Servico> servicos;
 
@@ -14,9 +15,10 @@ public class Protocolo {
         this.action = action;
     }
     
-    public Protocolo(String action, String nome){
+    public Protocolo(String action, String nome, String tipo){
         this.action = action;
         this.nome = nome;
+        this.tipo = tipo;
     }
        
     public void setAction(String action) {
@@ -66,4 +68,21 @@ public class Protocolo {
     public void setServicos(List<Servico> servicos){
         this.servicos = servicos;
     }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public List<Cliente> getUsuarios() {
+        return usuarios;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public void setUsuarios(List<Cliente> usuarios) {
+        this.usuarios = usuarios;
+    }
+    
 }

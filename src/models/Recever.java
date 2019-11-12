@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import views.HomeView;
 
 public class Recever extends Thread {
@@ -41,6 +42,8 @@ public class Recever extends Thread {
             }
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
+            JOptionPane.showMessageDialog(null, "ERRO: " + ex.getMessage());
+
         }
     }
 }

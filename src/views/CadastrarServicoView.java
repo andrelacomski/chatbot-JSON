@@ -1,5 +1,8 @@
 package views;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import models.Cliente;
 import models.ClienteTCP;
 import models.Servico;
@@ -99,7 +102,11 @@ public class CadastrarServicoView extends javax.swing.JFrame {
 
     private void bCadastrarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bCadastrarMouseClicked
         Servico servico = new Servico(iCargo.getText(), iDescricao.getText(), Float.parseFloat(iSalario.getText()));
-        clientetcp.cadastrarServico(servico);
+        try {
+            clientetcp.cadastrarServico(servico);
+        } catch (IOException ex) {
+            Logger.getLogger(CadastrarServicoView.class.getName()).log(Level.SEVERE, null, ex);
+        }
         this.dispose();
     }//GEN-LAST:event_bCadastrarMouseClicked
 

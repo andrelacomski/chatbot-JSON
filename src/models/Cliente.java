@@ -7,6 +7,7 @@ public class Cliente {
     public int porta;
     public String nome;
     public String ip;
+    public String tipo;
     public transient DataOutputStream saidaCliente;
 
     public void setSaidaCliente(DataOutputStream saidaCliente) {
@@ -23,11 +24,11 @@ public class Cliente {
         this.saidaCliente = saidaCliente;
     }
 
-    public Cliente(String nome, String ip, int porta, boolean status) {
+    public Cliente(String nome, String ip, int porta, String tipo) {
         this.nome = nome;
         this.ip = ip;
         this.porta = porta;
-//        this.status = status;
+        this.tipo = tipo;
     }
 
     public String getIp() {
@@ -56,6 +57,14 @@ public class Cliente {
 
     public void setPorta(int porta) {
         this.porta = porta;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
 
     public DataOutputStream getSaidaCliente() {

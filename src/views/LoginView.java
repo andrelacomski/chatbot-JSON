@@ -23,6 +23,7 @@ public class LoginView extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
         painel = new javax.swing.JPanel();
         iAddress = new javax.swing.JTextField();
         iPort = new javax.swing.JTextField();
@@ -162,8 +163,7 @@ public class LoginView extends javax.swing.JFrame {
     private void bLoginMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bLoginMouseClicked
     
         HomeView home = new HomeView(clientetcp);
-        
-        this.cliente = new Cliente(this.iAddress.getText(), Integer.parseInt(this.iPort.getText()), this.iName.getText(),null);            
+        this.cliente = new Cliente(this.iName.getText(), this.iAddress.getText(), Integer.parseInt(this.iPort.getText()), verificaTipo());            
         try {
             this.clientetcp = new ClienteTCP(cliente, home);
             home.setClienteTCP(this.clientetcp);
@@ -183,6 +183,14 @@ public class LoginView extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Falha ao conectar");        
     }//GEN-LAST:event_bLoginMouseClicked
 
+    public String verificaTipo(){
+        if(jbEmpregado.isSelected())
+            return "empregado";
+        else
+            return "empregador";
+                
+    }
+    
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -193,6 +201,7 @@ public class LoginView extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bLogin;
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JTextField iAddress;
     private javax.swing.JTextField iName;
     private javax.swing.JTextField iPort;

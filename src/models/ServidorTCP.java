@@ -4,8 +4,6 @@ import java.io.*;
 import java.net.*;
 import com.google.gson.Gson;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import views.ServidorView;
 
 public class ServidorTCP extends Thread {
@@ -41,6 +39,7 @@ public class ServidorTCP extends Thread {
                 switch (protocolo.getAction()) {
                     case "login":
                         this.cliente.setNome(protocolo.getNome());
+                        this.cliente.setTipo(protocolo.getTipo());
                         this.login(protocolo, out);
                         break;
                     case "logout":
@@ -66,13 +65,14 @@ public class ServidorTCP extends Thread {
         }
     }
 
-    public void login(Protocolo protocolo, DataOutputStream out) throws IOException {
+    public synchronized void login(Protocolo protocolo, DataOutputStream out) throws IOException {
         ListaClientes ctrlCliente = ListaClientes.getInstance();
         ListaServicos ctrlServico = ListaServicos.getInstance();
         Gson gson = new Gson();
         Protocolo envioUsuarios = new Protocolo("listarUsuarios");
         Protocolo envioServicos = new Protocolo("listarServicos");        
-        
+
+        this.cliente.setTipo(null);
         ctrlCliente.setClientes(this.cliente);
         envioUsuarios.setClientes((ArrayList<Cliente>) ctrlCliente.getClientes());
         main.preencheListaOnline((ArrayList<Cliente>) ctrlCliente.getClientes());
@@ -89,7 +89,7 @@ public class ServidorTCP extends Thread {
         System.out.println("[SERVIDOR]: Cliente conectado: " + this.cliente.getNome());
     }
     
-    public void desconectar(DataOutputStream out) throws IOException{
+    public synchronized void desconectar(DataOutputStream out) throws IOException{
         ListaClientes ctrlCliente = ListaClientes.getInstance();
         Gson gson = new Gson();
         Protocolo envio = new Protocolo("listarUsuarios");

@@ -43,7 +43,7 @@ public class ClienteTCP extends Thread {
             this.out = new DataOutputStream(this.serverSocket.getOutputStream());
             this.in = new DataInputStream(this.serverSocket.getInputStream());
             new Recever(in, home).start();
-            Protocolo protocolo = new Protocolo("login", this.cliente.getNome());
+            Protocolo protocolo = new Protocolo("login", this.cliente.getNome(), this.cliente.getTipo());
             Gson gson = new Gson();
             out.writeUTF(gson.toJson(protocolo));
             return true;
