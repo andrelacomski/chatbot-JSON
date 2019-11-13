@@ -5,19 +5,39 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
-import jdk.nashorn.internal.objects.NativeArray;
-import views.HomeView;
+import views.ChatDiretoView;
+import views.EmpregadoView;
+import views.EmpregadorView;
 
 public class Recever extends Thread {
 
     private final DataInputStream in;
-    private final HomeView home;
+    private EmpregadorView empregador;
+    private EmpregadoView empregado;
+    private String tipo;
+    private ChatDiretoView chat;
 
-    public Recever(DataInputStream in, HomeView home) {
+    public Recever(DataInputStream in, EmpregadorView home) {
         this.in = in;
-        this.home = home;
+        this.empregador = home;
+        this.tipo = "empregador";
     }
 
+    public Recever(DataInputStream in, EmpregadoView home) {
+        this.in = in;
+        this.empregado = home;
+        this.tipo = "empregado";
+    }
+    
+    
+    public void setChatDiretoView(ChatDiretoView chat){
+        this.chat = chat;
+    }
+    
+    public ChatDiretoView getChatDiretoView(){
+        return this.chat;
+    }
+    
     @Override
     public void run() {
         String recebe;
@@ -29,13 +49,28 @@ public class Recever extends Thread {
                 Gson gson = new Gson();
                 switch(protocolo.getAction()){
                     case "listarUsuarios":
-                        this.home.preencherListaOnline((ArrayList<Cliente>) protocolo.getClientes());
+                        if(this.tipo.equals("empregado"))
+                            this.empregado.preencherListaOnline((ArrayList<Cliente>) protocolo.getClientes());
+                        else
+                            this.empregador.preencherListaOnline((ArrayList<Cliente>) protocolo.getClientes());
                         break;
                     case "listarServicos":
-                        this.home.preencherListaServicos((ArrayList<Servico>) protocolo.getServicos());
+                        if(this.tipo.equals("empregado"))
+                            this.empregado.preencherListaServicos((ArrayList<Servico>) protocolo.getServicos());
+                        else
+                            this.empregador.preencherListaServicos((ArrayList<Servico>) protocolo.getServicos());
                         break;
                     case "broadcast":
-                        this.home.preencherListaChat(protocolo.getMensagem());
+                        if(this.tipo.equals("empregado"))
+                            this.empregado.preencherListaChat(protocolo.getMensagem());
+                        else
+                            this.empregador.preencherListaChat(protocolo.getMensagem());
+                        break;
+                    case "mensagemDireta":
+                        if(this.tipo.equals("empregado"))
+                            System.out.println("MENSAGEM DIRETA RECEBIDA: " + recebe);
+                        else
+                            System.out.println("MENSAGEM DIRETA RECEBIDA: " + recebe);
                         break;
                 }
                 
@@ -44,8 +79,6 @@ public class Recever extends Thread {
             }
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
-            JOptionPane.showMessageDialog(null, "ERRO: " + ex.getMessage());
-
         }
     }
 }

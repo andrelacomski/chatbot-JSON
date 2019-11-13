@@ -31,6 +31,12 @@ public class Cliente {
         this.tipo = tipo;
     }
 
+    public Cliente(String nome, String ip, int porta) {
+        this.nome = nome;
+        this.ip = ip;
+        this.porta = porta;
+    }
+    
     public String getIp() {
         return this.ip;
     }
@@ -42,10 +48,6 @@ public class Cliente {
     public int getPorta() {
         return this.porta;
     }
-
-//    public boolean getStatus() {
-//        return this.status;
-//    }
 
     public void setIp(String ip) {
         this.ip = ip;

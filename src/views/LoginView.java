@@ -1,9 +1,6 @@
 package views;
 
-import java.awt.Color;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import models.Cliente;
 import models.ClienteTCP;
@@ -12,7 +9,6 @@ public class LoginView extends javax.swing.JFrame {
     static ClienteTCP clientetcp;
     private Cliente cliente;
 
-    
     public LoginView() {
         initComponents();
         this.setLocationRelativeTo(null);
@@ -161,26 +157,35 @@ public class LoginView extends javax.swing.JFrame {
     }//GEN-LAST:event_jbEmpregadorMouseClicked
 
     private void bLoginMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bLoginMouseClicked
-    
-        HomeView home = new HomeView(clientetcp);
         this.cliente = new Cliente(this.iName.getText(), this.iAddress.getText(), Integer.parseInt(this.iPort.getText()), verificaTipo());            
+        EmpregadoView empregado = null;
+        EmpregadorView empregador = null;
         try {
-            this.clientetcp = new ClienteTCP(cliente, home);
-            home.setClienteTCP(this.clientetcp);
+            if(verificaTipo().equals("empregado")){
+                empregado = new EmpregadoView(clientetcp); 
+                LoginView.clientetcp = new ClienteTCP(cliente, empregado);
+                empregado.setClienteTCP(LoginView.clientetcp);
+            }
+            else{
+                empregador = new EmpregadorView(clientetcp);
+                LoginView.clientetcp = new ClienteTCP(cliente, empregador);
+                empregador.setClienteTCP(LoginView.clientetcp);
+            }
         } catch (IOException ex) {
-            Logger.getLogger(LoginView.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("ERRO AO ABRIR A THREAD.");
         }
         boolean status = false;
         try {
-            status = this.clientetcp.conectar();
+            status = LoginView.clientetcp.conectar();
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage());
         }
-        if(status == true){
-            home.setVisible(true);
-            this.dispose();
-        } else 
-            JOptionPane.showMessageDialog(null, "Falha ao conectar");        
+        
+        if(verificaTipo().equals("empregado"))
+            empregado.setVisible(true);
+        else
+            empregador.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_bLoginMouseClicked
 
     public String verificaTipo(){
@@ -188,7 +193,6 @@ public class LoginView extends javax.swing.JFrame {
             return "empregado";
         else
             return "empregador";
-                
     }
     
     public static void main(String args[]) {

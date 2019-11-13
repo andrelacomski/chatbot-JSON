@@ -22,7 +22,7 @@ public class ServidorTCP extends Thread {
         try {
             out = new DataOutputStream(clienteSocket.getOutputStream()); // prepara para enviar os dados
             in = new DataInputStream(this.clienteSocket.getInputStream()); // prepara para receber os dado
-            this.cliente = new Cliente(clienteSocket.getInetAddress().toString(), clienteSocket.getPort(), " ", out);
+            this.cliente = new Cliente(clienteSocket.getInetAddress().getHostAddress().toString(), clienteSocket.getPort(), " ", out);
         } catch (IOException e) {
             System.out.println("[SERVIDOR]: " + e.getMessage());
         }
@@ -56,24 +56,27 @@ public class ServidorTCP extends Thread {
                         protocolo.getServico().setEmpregador(cliente);
                         this.cadastrarServico(protocolo, out);
                         break;
+                    case "mensagemDireta":
+                        this.mensagemDireta(protocolo, out);
+                        break;
                 }
                 if (close)
                     break;
             }
 
         } catch (IOException e) {
-            System.out.println("[SERVIDOR]: Erro ao desconectar o Cliente: " + this.clienteSocket.getLocalAddress().getHostAddress());
+            System.out.println("[SERVIDOR]: Conexão perdida com o Cliente: " + this.clienteSocket.getLocalAddress().getHostAddress());
         }
     }
 
-    public synchronized void login(Protocolo protocolo, DataOutputStream out) throws IOException {
+    public void login(Protocolo protocolo, DataOutputStream out) throws IOException {
         ListaClientes ctrlCliente = ListaClientes.getInstance();
         ListaServicos ctrlServico = ListaServicos.getInstance();
         Gson gson = new Gson();
         Protocolo envioUsuarios = new Protocolo("listarUsuarios");
         Protocolo envioServicos = new Protocolo("listarServicos");        
 
-     //   this.cliente.setTipo(null);
+        this.cliente.setTipo(null);
         ctrlCliente.setClientes(this.cliente);
         envioUsuarios.setClientes((ArrayList<Cliente>) ctrlCliente.getClientes());
         main.preencheListaOnline((ArrayList<Cliente>) ctrlCliente.getClientes());
@@ -90,7 +93,7 @@ public class ServidorTCP extends Thread {
         System.out.println("[SERVIDOR]: Cliente conectado: " + this.cliente.getNome());
     }
     
-    public synchronized void desconectar(DataOutputStream out) throws IOException{
+    public void desconectar(DataOutputStream out) throws IOException{
         ListaClientes ctrlCliente = ListaClientes.getInstance();
         Gson gson = new Gson();
         Protocolo envio = new Protocolo("listarUsuarios");
@@ -140,4 +143,25 @@ public class ServidorTCP extends Thread {
         System.out.println("[SERVIÇOS]: " + gson.toJson(ctrlServico.getServicos()));
         System.out.println("[SERVIDOR]: " + protocolo.getServico().getCargo());
     }
+    
+    public void mensagemDireta(Protocolo protocolo, DataOutputStream out) throws IOException{
+        ListaClientes ctrlCliente = ListaClientes.getInstance();
+        Protocolo envio = new Protocolo("mensagemDireta");
+        Gson gson = new Gson();
+        envio.setRemetente(this.cliente);
+        envio.setMensagem(protocolo.getMensagem());
+    
+        for(Cliente client: ctrlCliente.getClientes()){
+            if(client.getIp().equals(protocolo.getDestinatario().getIp()) && 
+               client.getNome().equals(protocolo.getDestinatario().getNome()) &&
+               client.getPorta() == protocolo.getDestinatario().getPorta()){
+                client.saidaCliente.writeUTF(gson.toJson(envio));
+                break;
+            }
+        }
+        
+        System.out.println("MENSAGEM DIRETA RECEBIDA:" + gson.toJson(protocolo));
+        System.out.println("MENSAGEM DIRETA ENVIADA:" + gson.toJson(envio));
+    }
+    
 }

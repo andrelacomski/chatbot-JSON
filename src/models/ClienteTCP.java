@@ -3,7 +3,8 @@ package models;
 import com.google.gson.Gson;
 import java.io.*;
 import java.net.*;
-import views.HomeView;
+import views.EmpregadoView;
+import views.EmpregadorView;
 
 public class ClienteTCP extends Thread {
 
@@ -12,13 +13,19 @@ public class ClienteTCP extends Thread {
     private DataOutputStream out;
     private DataInputStream in;
     private String mensagem;
-    private HomeView home;
+    private EmpregadorView empregador;
+    private EmpregadoView empregado;
 
-    public ClienteTCP(Cliente cliente, HomeView home) throws IOException {
+    public ClienteTCP(Cliente cliente, EmpregadorView home) throws IOException {
         this.cliente = cliente;
-        this.home = home;
+        this.empregador = home;
     }
 
+    public ClienteTCP(Cliente cliente, EmpregadoView home) throws IOException {
+        this.cliente = cliente;
+        this.empregado = home;
+    }
+    
     public Cliente getCliente() {
         return cliente;
     }
@@ -42,7 +49,10 @@ public class ClienteTCP extends Thread {
 
             this.out = new DataOutputStream(this.serverSocket.getOutputStream());
             this.in = new DataInputStream(this.serverSocket.getInputStream());
-            new Recever(in, home).start();
+            if(this.cliente.getTipo().equals("empregado"))
+                new Recever(in, empregado).start();
+            else
+                new Recever(in, empregador).start();        
             Protocolo protocolo = new Protocolo("login", this.cliente.getNome(), this.cliente.getTipo());
             Gson gson = new Gson();
             out.writeUTF(gson.toJson(protocolo));
@@ -96,6 +106,13 @@ public class ClienteTCP extends Thread {
         } catch(IOException ex){
             System.out.println("[CLIENTE]: Problema para cadastrar serviço. " + ex.getMessage());
         }
+        return true;
+    }
+    
+    public boolean mensagemDireta(Protocolo protocolo) throws IOException{
+        Gson gson = new Gson();
+        System.out.println("[ENVIANDO MENSAGEM]: " + gson.toJson(protocolo));
+        out.writeUTF(gson.toJson(protocolo));
         return true;
     }
     

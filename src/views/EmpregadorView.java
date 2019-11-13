@@ -11,7 +11,7 @@ import javax.swing.table.TableModel;
 import models.Cliente;
 import models.Servico;
 
-public class HomeView extends javax.swing.JFrame {
+public class EmpregadorView extends javax.swing.JFrame {
 
     private ClienteTCP clientetcp;
     private DefaultListModel modelOnline;
@@ -22,7 +22,7 @@ public class HomeView extends javax.swing.JFrame {
         this.clientetcp = clientetcp;
     }
     
-    public HomeView(ClienteTCP clientetcp) {
+    public EmpregadorView(ClienteTCP clientetcp) {
         initComponents();
         this.modelOnline = new DefaultListModel<>();
         this.listaOnline.setModel(this.modelOnline);
@@ -35,7 +35,7 @@ public class HomeView extends javax.swing.JFrame {
         this.clientetcp = clientetcp;
     }
 
-    private HomeView() {
+    private EmpregadorView() {
 
     }
     
@@ -47,11 +47,18 @@ public class HomeView extends javax.swing.JFrame {
     }
 
     public void preencherListaServicos(ArrayList<Servico> servicos){
+        if(this.modelServicos.getRowCount() !=0)
+            for(int i = 0; i < this.modelServicos.getRowCount();)
+                this.modelServicos.removeRow(i);
+        
         for(Servico servico: servicos){
             if(servico == null) return;
-            System.out.println(servico.getCargo() + " " + servico.getSalario() + " " + servico.getDescricao());
-            System.out.println(servico.getEmpregador().getNome());
-            this.modelServicos.addRow(new Object[]{servico.getCargo(), servico.getSalario(), servico.getEmpregador().getNome(), servico.getDescricao()});
+            this.modelServicos.addRow(new Object[]{servico.getCargo(), 
+                                                   servico.getSalario(), 
+                                                   servico.getDescricao(),
+                                                   servico.getEmpregador().getNome(),
+                                                   servico.getEmpregador().getIp(),
+                                                   servico.getEmpregador().getPorta()});
         }
     }
     
@@ -80,6 +87,7 @@ public class HomeView extends javax.swing.JFrame {
         listaChat = new javax.swing.JList();
         jScrollPane5 = new javax.swing.JScrollPane();
         listaServicos = new javax.swing.JTable();
+        bMensagemPv = new javax.swing.JButton();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -105,7 +113,7 @@ public class HomeView extends javax.swing.JFrame {
             }
         });
 
-        bEnviarMensagem.setText("ENVIAR MENSAGEM");
+        bEnviarMensagem.setText("ENVIAR MENSAGEM GERAL");
         bEnviarMensagem.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 bEnviarMensagemMouseClicked(evt);
@@ -144,11 +152,11 @@ public class HomeView extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Vaga", "Salário", "Empregador", "Descrição"
+                "Vaga", "Salário", "Descrição", "Nome", "IP", "Porta"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Float.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.Float.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -156,6 +164,13 @@ public class HomeView extends javax.swing.JFrame {
             }
         });
         jScrollPane5.setViewportView(listaServicos);
+
+        bMensagemPv.setText("MENSAGEM DIRETA");
+        bMensagemPv.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                bMensagemPvMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout painelLayout = new javax.swing.GroupLayout(painel);
         painel.setLayout(painelLayout);
@@ -165,7 +180,7 @@ public class HomeView extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(painelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane5)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelLayout.createSequentialGroup()
+                    .addGroup(painelLayout.createSequentialGroup()
                         .addGroup(painelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(painelLayout.createSequentialGroup()
                                 .addComponent(tServicos)
@@ -174,18 +189,21 @@ public class HomeView extends javax.swing.JFrame {
                                 .addGap(6, 6, 6)
                                 .addGroup(painelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(iMensagem, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addGroup(painelLayout.createSequentialGroup()
                                         .addComponent(jLabel3)
                                         .addGap(0, 0, Short.MAX_VALUE))
-                                    .addComponent(bEnviarMensagem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(bEnviarMensagem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jScrollPane1))
                                 .addGap(18, 18, 18)))
                         .addGroup(painelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(bCadastrar, javax.swing.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE)
-                            .addGroup(painelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(tOnline)
-                                .addComponent(jScrollPane3)
-                                .addComponent(bDesconectar, javax.swing.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE)))))
+                            .addComponent(bCadastrar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(painelLayout.createSequentialGroup()
+                                .addGroup(painelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(tOnline)
+                                    .addComponent(jScrollPane3)
+                                    .addComponent(bDesconectar, javax.swing.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(bMensagemPv, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         painelLayout.setVerticalGroup(
@@ -205,9 +223,11 @@ public class HomeView extends javax.swing.JFrame {
                     .addComponent(bDesconectar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(painelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(bEnviarMensagem)
-                    .addComponent(bCadastrar))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
+                    .addComponent(bMensagemPv)
+                    .addComponent(bEnviarMensagem))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(bCadastrar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(tServicos)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -255,11 +275,18 @@ public class HomeView extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_bDesconectarMouseClicked
 
+    private void bMensagemPvMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bMensagemPvMouseClicked
+        int row = this.listaServicos.getSelectedRow();
+        Cliente auxiliar = new Cliente(this.modelServicos.getValueAt(row, 3).toString(), this.modelServicos.getValueAt(row, 4).toString(), (int) this.modelServicos.getValueAt(row, 5));
+        ChatDiretoView chat = new ChatDiretoView(this.clientetcp, auxiliar);
+        chat.setVisible(true);
+    }//GEN-LAST:event_bMensagemPvMouseClicked
+
     public static void main(String args[]) {
 
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new HomeView().setVisible(true);
+                new EmpregadorView().setVisible(true);
             }
         });
     }
@@ -268,6 +295,7 @@ public class HomeView extends javax.swing.JFrame {
     private javax.swing.JButton bCadastrar;
     private javax.swing.JButton bDesconectar;
     private javax.swing.JButton bEnviarMensagem;
+    private javax.swing.JButton bMensagemPv;
     private javax.swing.JTextField iMensagem;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;

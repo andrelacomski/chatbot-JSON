@@ -8,13 +8,15 @@ public class Protocolo {
     private String mensagem;
     private Servico servico;
     private String tipo;
+    private Cliente remetente;
+    private Cliente destinatario;
     private List <Cliente> usuarios;
     private List <Servico> servicos;
 
     public Protocolo(String action){
         this.action = action;
     }
-    
+
     public Protocolo(String action, String nome, String tipo){
         this.action = action;
         this.nome = nome;
@@ -84,5 +86,23 @@ public class Protocolo {
     public void setUsuarios(List<Cliente> usuarios) {
         this.usuarios = usuarios;
     }
+    
+        public Cliente getRemetente() {
+        return remetente;
+    }
+
+    public Cliente getDestinatario() {
+        return destinatario;
+    }
+
+    public void setRemetente(Cliente remetente) {
+        this.remetente = remetente;
+    }
+
+    public void setDestinatario(Cliente destinatario) {
+        this.destinatario = destinatario;
+    }
+    
+    
     
 }
