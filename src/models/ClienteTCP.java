@@ -3,6 +3,7 @@ package models;
 import com.google.gson.Gson;
 import java.io.*;
 import java.net.*;
+import views.ChatDiretoView;
 import views.EmpregadoView;
 import views.EmpregadorView;
 
@@ -15,7 +16,9 @@ public class ClienteTCP extends Thread {
     private String mensagem;
     private EmpregadorView empregador;
     private EmpregadoView empregado;
-
+    private ChatDiretoView chatDireto;
+    private Recever recever;
+    
     public ClienteTCP(Cliente cliente, EmpregadorView home) throws IOException {
         this.cliente = cliente;
         this.empregador = home;
@@ -24,6 +27,10 @@ public class ClienteTCP extends Thread {
     public ClienteTCP(Cliente cliente, EmpregadoView home) throws IOException {
         this.cliente = cliente;
         this.empregado = home;
+    }
+    
+    public void setChat(ChatDiretoView chatDireto){
+        this.chatDireto = chatDireto;
     }
     
     public Cliente getCliente() {
@@ -50,9 +57,11 @@ public class ClienteTCP extends Thread {
             this.out = new DataOutputStream(this.serverSocket.getOutputStream());
             this.in = new DataInputStream(this.serverSocket.getInputStream());
             if(this.cliente.getTipo().equals("empregado"))
-                new Recever(in, empregado).start();
-            else
-                new Recever(in, empregador).start();        
+               this.recever = new Recever(in, empregado);
+            else 
+                this.recever = new Recever(in, empregador);
+            this.recever.start();
+            
             Protocolo protocolo = new Protocolo("login", this.cliente.getNome(), this.cliente.getTipo());
             Gson gson = new Gson();
             out.writeUTF(gson.toJson(protocolo));

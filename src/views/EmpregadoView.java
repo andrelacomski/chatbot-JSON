@@ -12,18 +12,29 @@ import models.Servico;
 public class EmpregadoView extends javax.swing.JFrame {
 
     private ClienteTCP clientetcp;
-    private DefaultListModel modelOnline;
+    private DefaultTableModel modelOnline;
     private DefaultTableModel modelServicos;
     private DefaultListModel modelChat;
+    private ArrayList <ChatDiretoView> chat = new ArrayList<ChatDiretoView>();
     
     public void setClienteTCP(ClienteTCP clientetcp){
         this.clientetcp = clientetcp;
     }
     
+    public ClienteTCP getClienteTCP(){
+        return this.clientetcp;
+    }
+    
+    public void setChat(ChatDiretoView chat){
+        this.chat.add(chat);
+    }
+    
+    public ArrayList<ChatDiretoView> getChat (){
+        return this.chat;
+    }
     public EmpregadoView(ClienteTCP clientetcp) {
         initComponents();
-        this.modelOnline = new DefaultListModel<>();
-        this.listaOnline.setModel(this.modelOnline);
+        this.modelOnline = (DefaultTableModel) this.listaOnline.getModel();
         this.modelServicos = (DefaultTableModel) this.listaServicos.getModel();
         this.modelChat = new DefaultListModel<>();
         this.listChat.setModel(this.modelChat);
@@ -37,9 +48,15 @@ public class EmpregadoView extends javax.swing.JFrame {
     }
     
     public void preencherListaOnline(ArrayList<Cliente> clientes){
-        this.modelOnline.clear();
+     if(this.modelOnline.getRowCount() !=0)
+            for(int i = 0; i < this.modelOnline.getRowCount();)
+                this.modelOnline.removeRow(i);
+        
         for(Cliente cliente: clientes){
-            this.modelOnline.addElement(cliente.getNome());
+            if(cliente == null) return;
+            this.modelOnline.addRow(new Object[]{cliente.getNome(),
+                                                   cliente.getIp(),
+                                                   cliente.getPorta()});
         }
     }
         
@@ -73,8 +90,6 @@ public class EmpregadoView extends javax.swing.JFrame {
         tOnlines = new javax.swing.JLabel();
         listaChat = new javax.swing.JScrollPane();
         listChat = new javax.swing.JList();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        listaOnline = new javax.swing.JList();
         iMensagem = new javax.swing.JTextField();
         bEnviarMensagem = new javax.swing.JButton();
         bDesconectar = new javax.swing.JButton();
@@ -82,6 +97,8 @@ public class EmpregadoView extends javax.swing.JFrame {
         tServicos = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         listaServicos = new javax.swing.JTable();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        listaOnline = new javax.swing.JTable();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -108,13 +125,6 @@ public class EmpregadoView extends javax.swing.JFrame {
             public Object getElementAt(int i) { return strings[i]; }
         });
         listaChat.setViewportView(listChat);
-
-        listaOnline.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane1.setViewportView(listaOnline);
 
         bEnviarMensagem.setText("ENVIAR MENSAGEM GERAL");
         bEnviarMensagem.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -164,6 +174,31 @@ public class EmpregadoView extends javax.swing.JFrame {
         });
         jScrollPane3.setViewportView(listaServicos);
 
+        listaOnline.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Nome", "IP", "Porta"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.Integer.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane4.setViewportView(listaOnline);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -171,24 +206,25 @@ public class EmpregadoView extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(bEnviarMensagem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(iMensagem)
-                            .addComponent(listaChat, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(tChat)
-                                .addGap(0, 0, Short.MAX_VALUE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane1)
-                            .addComponent(tOnlines)
-                            .addComponent(bDesconectar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(bMensagemPv, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)))
+                    .addComponent(jScrollPane3)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(tServicos)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 668, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tServicos)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(iMensagem, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(tChat, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(listaChat, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(bEnviarMensagem, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(bMensagemPv, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(bDesconectar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(tOnlines)
+                                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -199,22 +235,21 @@ public class EmpregadoView extends javax.swing.JFrame {
                     .addComponent(tChat)
                     .addComponent(tOnlines))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(listaChat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(listaChat))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(iMensagem, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(bDesconectar))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(bEnviarMensagem)
+                    .addComponent(bDesconectar)
                     .addComponent(bMensagemPv))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(bEnviarMensagem)
                 .addGap(18, 18, 18)
                 .addComponent(tServicos)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(15, 15, 15))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         pack();
@@ -224,6 +259,7 @@ public class EmpregadoView extends javax.swing.JFrame {
         clientetcp.setMensagem(this.iMensagem.getText());
         try {
             clientetcp.enviarMensagem();
+            this.iMensagem.setText("");
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage());
         }
@@ -243,8 +279,9 @@ public class EmpregadoView extends javax.swing.JFrame {
     private void bMensagemPvMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bMensagemPvMouseClicked
         int row = this.listaServicos.getSelectedRow();
         Cliente auxiliar = new Cliente(this.modelServicos.getValueAt(row, 3).toString(), this.modelServicos.getValueAt(row, 4).toString(), (int) this.modelServicos.getValueAt(row, 5));
-        ChatDiretoView chat = new ChatDiretoView(this.clientetcp, auxiliar);
-        chat.setVisible(true);
+        ChatDiretoView chatDireto = new ChatDiretoView(this.clientetcp, auxiliar);
+        this.chat.add(chatDireto);
+        chatDireto.setVisible(true);
     }//GEN-LAST:event_bMensagemPvMouseClicked
 
     public static void main(String args[]) {
@@ -260,13 +297,13 @@ public class EmpregadoView extends javax.swing.JFrame {
     private javax.swing.JButton bEnviarMensagem;
     private javax.swing.JButton bMensagemPv;
     private javax.swing.JTextField iMensagem;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTable jTable1;
     private javax.swing.JList listChat;
     private javax.swing.JScrollPane listaChat;
-    private javax.swing.JList listaOnline;
+    private javax.swing.JTable listaOnline;
     private javax.swing.JTable listaServicos;
     private javax.swing.JLabel tChat;
     private javax.swing.JLabel tOnlines;

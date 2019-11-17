@@ -3,6 +3,7 @@ package views;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import models.Cliente;
 import models.Servico;
 import models.Servidor;
@@ -11,15 +12,15 @@ public class ServidorView extends javax.swing.JFrame {
 
     protected Servidor server;
     protected Thread thread;
-    private DefaultListModel modelOnline;
-    private DefaultListModel modelServicos;
+    private DefaultTableModel modelOnline;
+    private DefaultTableModel modelServicos;
     private DefaultListModel modelChatGlobal;
     
     public ServidorView() {
         initComponents();
-        this.modelOnline = new DefaultListModel<>();
+        this.modelOnline = (DefaultTableModel) this.listaOnline.getModel();
         this.listaOnline.setModel(this.modelOnline);
-        this.modelServicos = new DefaultListModel<>();
+        this.modelServicos = (DefaultTableModel) this.listaServicos.getModel();
         this.listaServicos.setModel(this.modelServicos);
         this.modelChatGlobal = new DefaultListModel<>();
         this.listaMensagem.setModel(this.modelChatGlobal);
@@ -30,18 +31,31 @@ public class ServidorView extends javax.swing.JFrame {
     }
     
     public void preencheListaOnline(ArrayList<Cliente> clientes){
-        this.modelOnline.clear();
+         if(this.modelOnline.getRowCount() !=0)
+            for(int i = 0; i < this.modelOnline.getRowCount();)
+                this.modelOnline.removeRow(i);
+        
         for(Cliente cliente: clientes){
-            System.out.println(cliente.getNome());
-            this.modelOnline.addElement(cliente.getNome());
+            if(cliente == null) return;
+            this.modelOnline.addRow(new Object[]{cliente.getNome(),
+                                                   cliente.getIp(),
+                                                   cliente.getPorta()});
         }
     }
     
     public void preencheListaServicos(ArrayList<Servico> servicos){
-        this.modelServicos.clear();
+        if(this.modelServicos.getRowCount() !=0)
+            for(int i = 0; i < this.modelServicos.getRowCount();)
+                this.modelServicos.removeRow(i);
+        
         for(Servico servico: servicos){
-            System.out.println(servico.getCargo());
-            this.modelServicos.addElement(servico.getCargo());
+            if(servico == null) return;
+            this.modelServicos.addRow(new Object[]{servico.getCargo(), 
+                                                   servico.getSalario(), 
+                                                   servico.getDescricao(),
+                                                   servico.getEmpregador().getNome(),
+                                                   servico.getEmpregador().getIp(),
+                                                   servico.getEmpregador().getPorta()});
         }
     }
     
@@ -56,16 +70,16 @@ public class ServidorView extends javax.swing.JFrame {
         iPorta = new javax.swing.JTextField();
         tPorta = new javax.swing.JLabel();
         bLigar = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        listaOnline = new javax.swing.JList();
         bDesliga = new javax.swing.JButton();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        listaServicos = new javax.swing.JList();
         jScrollPane3 = new javax.swing.JScrollPane();
         listaMensagem = new javax.swing.JList();
         tOnline = new javax.swing.JLabel();
         tServico = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        listaOnline = new javax.swing.JTable();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        listaServicos = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -85,26 +99,12 @@ public class ServidorView extends javax.swing.JFrame {
             }
         });
 
-        listaOnline.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane1.setViewportView(listaOnline);
-
         bDesliga.setText("Desligar");
         bDesliga.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bDesligaActionPerformed(evt);
             }
         });
-
-        listaServicos.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane2.setViewportView(listaServicos);
 
         listaMensagem.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -119,37 +119,83 @@ public class ServidorView extends javax.swing.JFrame {
 
         jLabel1.setText("Chat Global");
 
+        listaOnline.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Nome", "IP", "Porta"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.Integer.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane4.setViewportView(listaOnline);
+
+        listaServicos.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Vaga", "Salário", "Descrição", "Nome", "IP", "Porta"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.Float.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane5.setViewportView(listaServicos);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(tServico)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(tPorta)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(iPorta, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(bLigar, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(bDesliga, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(tOnline)
-                                .addGap(127, 127, 127)
-                                .addComponent(tServico)))
-                        .addGap(0, 12, Short.MAX_VALUE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(tPorta)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(iPorta, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(bLigar, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(bDesliga, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(tOnline))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1)))
+                    .addComponent(jScrollPane5))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -160,17 +206,19 @@ public class ServidorView extends javax.swing.JFrame {
                     .addComponent(tPorta)
                     .addComponent(bLigar)
                     .addComponent(bDesliga))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tOnline)
-                    .addComponent(tServico)
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2)
-                    .addComponent(jScrollPane3))
-                .addContainerGap())
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 146, Short.MAX_VALUE)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addGap(8, 8, 8)
+                .addComponent(tServico)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(16, 16, 16))
         );
 
         pack();
@@ -211,12 +259,12 @@ public class ServidorView extends javax.swing.JFrame {
     private javax.swing.JButton bLigar;
     private javax.swing.JTextField iPorta;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JList listaMensagem;
-    private javax.swing.JList listaOnline;
-    private javax.swing.JList listaServicos;
+    private javax.swing.JTable listaOnline;
+    private javax.swing.JTable listaServicos;
     private javax.swing.JLabel tOnline;
     private javax.swing.JLabel tPorta;
     private javax.swing.JLabel tServico;

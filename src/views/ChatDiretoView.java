@@ -2,8 +2,6 @@ package views;
 
 import com.google.gson.Gson;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import models.Cliente;
@@ -17,8 +15,17 @@ public class ChatDiretoView extends javax.swing.JFrame {
     private DefaultListModel modelMensagem;
     
     public ChatDiretoView() {
+    
     }
 
+    public void setCliente(Cliente cliente){
+        this.cliente = cliente;
+    }
+    
+    public Cliente getCliente(){
+        return this.cliente;
+    }
+    
     public ChatDiretoView(ClienteTCP clientetcp, Cliente cliente){
         initComponents();
         this.setTitle("Chat");
@@ -30,6 +37,9 @@ public class ChatDiretoView extends javax.swing.JFrame {
         modelMensagem.clear();
     }
     
+    public void preencheMensagem(String mensagem){
+        this.modelMensagem.addElement(mensagem);
+    }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -98,11 +108,14 @@ public class ChatDiretoView extends javax.swing.JFrame {
     private void bEnviarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bEnviarMouseClicked
         Protocolo protocolo = new Protocolo("mensagemDireta");
         Gson gson = new Gson();
+        String mensagem = "[EU]: " + iMensagem.getText();
         protocolo.setMensagem("["+ this.clientetcp.getCliente().getNome() +"]:" + iMensagem.getText());
-        this.modelMensagem.addElement(protocolo.getMensagem());
+        this.modelMensagem.addElement(mensagem);
         protocolo.setDestinatario(this.cliente);
         try {
+            this.clientetcp.setChat(this);
             this.clientetcp.mensagemDireta(protocolo);
+            this.iMensagem.setText("");
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, "Falha ao enviar mensagem: " + ex.getMessage());
         }

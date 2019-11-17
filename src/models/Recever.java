@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import javax.swing.JOptionPane;
 import views.ChatDiretoView;
 import views.EmpregadoView;
 import views.EmpregadorView;
@@ -15,7 +14,6 @@ public class Recever extends Thread {
     private EmpregadorView empregador;
     private EmpregadoView empregado;
     private String tipo;
-    private ChatDiretoView chat;
 
     public Recever(DataInputStream in, EmpregadorView home) {
         this.in = in;
@@ -27,15 +25,6 @@ public class Recever extends Thread {
         this.in = in;
         this.empregado = home;
         this.tipo = "empregado";
-    }
-    
-    
-    public void setChatDiretoView(ChatDiretoView chat){
-        this.chat = chat;
-    }
-    
-    public ChatDiretoView getChatDiretoView(){
-        return this.chat;
     }
     
     @Override
@@ -67,10 +56,73 @@ public class Recever extends Thread {
                             this.empregador.preencherListaChat(protocolo.getMensagem());
                         break;
                     case "mensagemDireta":
-                        if(this.tipo.equals("empregado"))
-                            System.out.println("MENSAGEM DIRETA RECEBIDA: " + recebe);
-                        else
-                            System.out.println("MENSAGEM DIRETA RECEBIDA: " + recebe);
+                        if(this.tipo.equals("empregado")){
+                            ArrayList<ChatDiretoView> auxiliar = this.empregado.getChat();
+                            if(auxiliar.size() < 1){
+                                Cliente clienteDireto = new Cliente(protocolo.getRemetente().getNome(),
+                                                                    protocolo.getRemetente().getIp(),
+                                                                    protocolo.getRemetente().getPorta());
+                                
+                                ChatDiretoView chatDireto = new ChatDiretoView(this.empregado.getClienteTCP(), clienteDireto);
+                                auxiliar.add(chatDireto);
+                                chatDireto.setVisible(true);
+                                chatDireto.preencheMensagem(protocolo.getMensagem());
+                            } else{
+                                boolean achou = false;
+                                for(ChatDiretoView chats: auxiliar){
+                                    if(chats.getCliente().getIp().equals(protocolo.getRemetente().getIp()) &&
+                                       chats.getCliente().getPorta() == protocolo.getRemetente().getPorta() &&
+                                       chats.getCliente().getNome().equals(protocolo.getRemetente().getNome())){
+                                        chats.preencheMensagem(protocolo.getMensagem());
+                                        achou = true;
+                                        break;
+                                    }
+                                }
+                                if(!achou){
+                                    Cliente clienteDireto = new Cliente(protocolo.getRemetente().getNome(),
+                                                                    protocolo.getRemetente().getIp(),
+                                                                    protocolo.getRemetente().getPorta());
+                                
+                                    ChatDiretoView chatDireto = new ChatDiretoView(this.empregado.getClienteTCP(), clienteDireto);
+                                    auxiliar.add(chatDireto);
+                                    chatDireto.setVisible(true);
+                                    chatDireto.preencheMensagem(protocolo.getMensagem());
+                                }
+                            }                            
+                        } else {
+                            ArrayList<ChatDiretoView> auxiliar = this.empregador.getChat();
+                            if(auxiliar.size() < 1){
+                                Cliente clienteDireto = new Cliente(protocolo.getRemetente().getNome(),
+                                                                    protocolo.getRemetente().getIp(),
+                                                                    protocolo.getRemetente().getPorta());
+                                
+                                ChatDiretoView chatDireto = new ChatDiretoView(this.empregador.getClienteTCP(), clienteDireto);
+                                auxiliar.add(chatDireto);
+                                chatDireto.setVisible(true);
+                                chatDireto.preencheMensagem(protocolo.getMensagem());
+                            } else {
+                                boolean achou = false;
+                                for(ChatDiretoView chats: auxiliar){
+                                    if(chats.getCliente().getIp().equals(protocolo.getRemetente().getIp()) &&
+                                       chats.getCliente().getPorta() == protocolo.getRemetente().getPorta() &&
+                                       chats.getCliente().getNome().equals(protocolo.getRemetente().getNome())){
+                                        chats.preencheMensagem(protocolo.getMensagem());
+                                        achou = true;
+                                        break;
+                                    }
+                                }
+                                if(!achou){
+                                    Cliente clienteDireto = new Cliente(protocolo.getRemetente().getNome(),
+                                                                    protocolo.getRemetente().getIp(),
+                                                                    protocolo.getRemetente().getPorta());
+                                
+                                    ChatDiretoView chatDireto = new ChatDiretoView(this.empregador.getClienteTCP(), clienteDireto);
+                                    auxiliar.add(chatDireto);
+                                    chatDireto.setVisible(true);
+                                    chatDireto.preencheMensagem(protocolo.getMensagem());
+                                }
+                            }
+                        }
                         break;
                 }
                 

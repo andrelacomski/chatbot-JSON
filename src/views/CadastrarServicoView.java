@@ -1,6 +1,7 @@
 package views;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import models.Cliente;
@@ -37,8 +38,16 @@ public class CadastrarServicoView extends javax.swing.JFrame {
         tCargo = new javax.swing.JLabel();
         tSalario = new javax.swing.JLabel();
         tDescricao = new javax.swing.JLabel();
+        bVoltar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        iSalario.setToolTipText("");
+        iSalario.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                iSalarioKeyPressed(evt);
+            }
+        });
 
         iDescricao.setColumns(20);
         iDescricao.setRows(5);
@@ -57,13 +66,24 @@ public class CadastrarServicoView extends javax.swing.JFrame {
 
         tDescricao.setText("Descrição:");
 
+        bVoltar.setText("VOLTAR");
+        bVoltar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                bVoltarMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(bVoltar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(bCadastrar, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(tDescricao)
@@ -73,8 +93,7 @@ public class CadastrarServicoView extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(iSalario)
                             .addComponent(iCargo)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 306, Short.MAX_VALUE)))
-                    .addComponent(bCadastrar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 306, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -88,20 +107,22 @@ public class CadastrarServicoView extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(iSalario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tSalario))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                .addGap(28, 28, 28)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tDescricao))
-                .addGap(29, 29, 29)
-                .addComponent(bCadastrar)
-                .addGap(34, 34, 34))
+                    .addComponent(tDescricao)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(bCadastrar)
+                    .addComponent(bVoltar))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void bCadastrarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bCadastrarMouseClicked
-        Servico servico = new Servico(iCargo.getText(), iDescricao.getText(), Float.parseFloat(iSalario.getText()));
+        Servico servico = new Servico(iCargo.getText(), iDescricao.getText(), Float.parseFloat(iSalario.getText().replace(",",".")));
         try {
             clientetcp.cadastrarServico(servico);
         } catch (IOException ex) {
@@ -109,6 +130,14 @@ public class CadastrarServicoView extends javax.swing.JFrame {
         }
         this.dispose();
     }//GEN-LAST:event_bCadastrarMouseClicked
+
+    private void iSalarioKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_iSalarioKeyPressed
+
+    }//GEN-LAST:event_iSalarioKeyPressed
+
+    private void bVoltarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bVoltarMouseClicked
+        this.dispose();
+    }//GEN-LAST:event_bVoltarMouseClicked
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -120,6 +149,7 @@ public class CadastrarServicoView extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bCadastrar;
+    private javax.swing.JButton bVoltar;
     private javax.swing.JTextField iCargo;
     private javax.swing.JTextArea iDescricao;
     private javax.swing.JTextField iSalario;
