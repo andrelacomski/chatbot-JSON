@@ -56,6 +56,7 @@ public class Recever extends Thread {
                             this.empregador.preencherListaChat(protocolo.getMensagem());
                         break;
                     case "mensagemDireta":
+                        protocolo.setMensagem(protocolo.getRemetente().getNome()+ ": " + protocolo.getMensagem());
                         if(this.tipo.equals("empregado")){
                             ArrayList<ChatDiretoView> auxiliar = this.empregado.getChat();
                             if(auxiliar.size() < 1){
@@ -130,7 +131,11 @@ public class Recever extends Thread {
                     break;             
             }
         } catch (IOException ex) {
-            System.out.println(ex.getMessage());
+            System.out.println("SERVIDOR CAIU");
+            if(this.tipo.equals("empregado"))
+                this.empregado.servidorClose();
+            else
+                this.empregador.servidorClose();
         }
     }
 }

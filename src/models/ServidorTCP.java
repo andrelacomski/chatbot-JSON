@@ -4,6 +4,8 @@ import java.io.*;
 import java.net.*;
 import com.google.gson.Gson;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import views.ServidorView;
 
 public class ServidorTCP extends Thread {
@@ -46,7 +48,7 @@ public class ServidorTCP extends Thread {
                         out.close();
                         in.close();
                         clienteSocket.close();
-                        this.desconectar(out);
+                        this.desconectar();
                         close = true;
                         break;
                     case "broadcast":
@@ -65,7 +67,12 @@ public class ServidorTCP extends Thread {
             }
 
         } catch (IOException e) {
-            System.out.println("[SERVIDOR]: Conexão perdida com o Cliente: " + this.clienteSocket.getLocalAddress().getHostAddress());
+            System.out.println("[SERVIDOR]: Conexão perdida com o Cliente: " + this.cliente.getNome());
+            try {
+                this.desconectar();
+            } catch (IOException ex) {
+                System.out.println("[SERVIDOR]: Erro ao remover cliente com conexão perdida");
+            }
         }
     }
 
@@ -93,7 +100,7 @@ public class ServidorTCP extends Thread {
         System.out.println("[SERVIDOR]: Cliente conectado: " + this.cliente.getNome());
     }
     
-    public void desconectar(DataOutputStream out) throws IOException{
+    public void desconectar() throws IOException{
         ListaClientes ctrlCliente = ListaClientes.getInstance();
         Gson gson = new Gson();
         Protocolo envio = new Protocolo("listarUsuarios");
@@ -114,7 +121,7 @@ public class ServidorTCP extends Thread {
         ListaClientes ctrlCliente = ListaClientes.getInstance();
         Protocolo envio = new Protocolo("broadcast");
         Gson gson = new Gson();
-        String mensagem = "[" + cliente.getNome() + "]: " + protocolo.getMensagem();
+        String mensagem = cliente.getNome() + ": " + protocolo.getMensagem();
         
         envio.setMensagem(mensagem);
         main.preencheListaChatGlobal(mensagem);

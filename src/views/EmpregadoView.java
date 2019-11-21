@@ -80,6 +80,13 @@ public class EmpregadoView extends javax.swing.JFrame {
         this.modelChat.addElement(mensagem);
     }
     
+    public void servidorClose(){
+        JOptionPane.showMessageDialog(null, "Servidor fechado! Tente mais tarde");
+        LoginView login = new LoginView();
+        login.setVisible(true);
+        this.dispose();
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -277,8 +284,8 @@ public class EmpregadoView extends javax.swing.JFrame {
     }//GEN-LAST:event_bDesconectarMouseClicked
 
     private void bMensagemPvMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bMensagemPvMouseClicked
-        int row = this.listaServicos.getSelectedRow();
-        Cliente auxiliar = new Cliente(this.modelServicos.getValueAt(row, 3).toString(), this.modelServicos.getValueAt(row, 4).toString(), (int) this.modelServicos.getValueAt(row, 5));
+        int row = this.listaOnline.getSelectedRow();
+        Cliente auxiliar = new Cliente(this.modelOnline.getValueAt(row, 0).toString(), this.modelOnline.getValueAt(row, 1).toString(), (int) this.modelOnline.getValueAt(row, 2));
         ChatDiretoView chatDireto = new ChatDiretoView(this.clientetcp, auxiliar);
         this.chat.add(chatDireto);
         chatDireto.setVisible(true);

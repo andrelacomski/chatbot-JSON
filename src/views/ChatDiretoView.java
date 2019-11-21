@@ -109,7 +109,7 @@ public class ChatDiretoView extends javax.swing.JFrame {
         Protocolo protocolo = new Protocolo("mensagemDireta");
         Gson gson = new Gson();
         String mensagem = "[EU]: " + iMensagem.getText();
-        protocolo.setMensagem("["+ this.clientetcp.getCliente().getNome() +"]:" + iMensagem.getText());
+        protocolo.setMensagem(iMensagem.getText());
         this.modelMensagem.addElement(mensagem);
         protocolo.setDestinatario(this.cliente);
         try {
