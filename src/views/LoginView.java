@@ -68,10 +68,15 @@ public class LoginView extends javax.swing.JFrame {
             }
         });
 
-        jbEmpregado.setText("Empregado");
+        jbEmpregado.setText("Desempregado");
         jbEmpregado.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jbEmpregadoMouseClicked(evt);
+            }
+        });
+        jbEmpregado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbEmpregadoActionPerformed(evt);
             }
         });
 
@@ -82,28 +87,26 @@ public class LoginView extends javax.swing.JFrame {
             .addGroup(painelLayout.createSequentialGroup()
                 .addGroup(painelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(painelLayout.createSequentialGroup()
-                        .addGap(52, 52, 52)
+                        .addContainerGap()
+                        .addComponent(bLogin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(painelLayout.createSequentialGroup()
+                        .addGap(16, 16, 16)
+                        .addGroup(painelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(tIpPorta)
+                            .addComponent(tUsuario))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(painelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(painelLayout.createSequentialGroup()
-                                .addGroup(painelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(tIpPorta)
-                                    .addComponent(tUsuario))
-                                .addGap(18, 18, 18)
-                                .addGroup(painelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(iName)
-                                    .addGroup(painelLayout.createSequentialGroup()
-                                        .addComponent(iAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(iPort, javax.swing.GroupLayout.DEFAULT_SIZE, 63, Short.MAX_VALUE))))
-                            .addGroup(painelLayout.createSequentialGroup()
-                                .addGap(2, 2, 2)
-                                .addGroup(painelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jbEmpregador)
-                                    .addComponent(jbEmpregado))
-                                .addGap(0, 0, Short.MAX_VALUE))))
+                                .addComponent(iAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(iPort, javax.swing.GroupLayout.DEFAULT_SIZE, 72, Short.MAX_VALUE))
+                            .addComponent(iName)))
                     .addGroup(painelLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(bLogin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(jbEmpregador)
+                        .addGap(18, 18, 18)
+                        .addComponent(jbEmpregado)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         painelLayout.setVerticalGroup(
@@ -118,13 +121,13 @@ public class LoginView extends javax.swing.JFrame {
                 .addGroup(painelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(iName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tUsuario))
-                .addGap(26, 26, 26)
-                .addComponent(jbEmpregador)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
-                .addComponent(jbEmpregado)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(painelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jbEmpregador)
+                    .addComponent(jbEmpregado))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
                 .addComponent(bLogin)
-                .addGap(76, 76, 76))
+                .addGap(20, 20, 20))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -187,6 +190,10 @@ public class LoginView extends javax.swing.JFrame {
             empregador.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_bLoginMouseClicked
+
+    private void jbEmpregadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbEmpregadoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jbEmpregadoActionPerformed
 
     public String verificaTipo(){
         if(jbEmpregado.isSelected())

@@ -45,9 +45,9 @@ public class ServidorTCP extends Thread {
                         this.login(protocolo, out);
                         break;
                     case "logout":
-//                        out.close();
-//                        in.close();
-//                        clienteSocket.close();
+                        out.close();
+                        in.close();
+                        clienteSocket.close();
                         this.desconectar();
                         close = true;
                         break;
@@ -60,6 +60,12 @@ public class ServidorTCP extends Thread {
                         break;
                     case "mensagemDireta":
                         this.mensagemDireta(protocolo, out);
+                        break;
+                    case "interesseServico":
+                        this.interesseServico(protocolo, out);
+                        break;
+                    case "contratacao":
+                        this.contratacao(protocolo, out);
                         break;
                 }
                 if (close)
@@ -115,7 +121,6 @@ public class ServidorTCP extends Thread {
         System.out.println("[ONLINES]: " + gson.toJson(ctrlCliente.getClientes()));
         System.out.println("[SERVIDOR]: Cliente desconectado: " + this.cliente.getNome());
     }
-    
     
     public void broadcast(Protocolo protocolo, DataOutputStream out) throws IOException{
         ListaClientes ctrlCliente = ListaClientes.getInstance();
@@ -175,6 +180,14 @@ public class ServidorTCP extends Thread {
         }
         System.out.println("MENSAGEM DIRETA RECEBIDA:" + gson.toJson(protocolo));
         System.out.println("MENSAGEM DIRETA ENVIADA:" + gson.toJson(envio));
+    }
+    
+    public void interesseServico(Protocolo protocolo, DataOutputStream out){
+        
+    }
+    
+    public void contratacao(Protocolo protocolo, DataOutputStream out){
+        
     }
     
 }

@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
+import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import models.Cliente;
 import models.ClienteTCP;
 import models.Servico;
@@ -15,23 +18,24 @@ public class EmpregadoView extends javax.swing.JFrame {
     private DefaultTableModel modelOnline;
     private DefaultTableModel modelServicos;
     private DefaultListModel modelChat;
-    private ArrayList <ChatDiretoView> chat = new ArrayList<ChatDiretoView>();
-    
-    public void setClienteTCP(ClienteTCP clientetcp){
+    private ArrayList<ChatDiretoView> chat = new ArrayList<ChatDiretoView>();
+
+    public void setClienteTCP(ClienteTCP clientetcp) {
         this.clientetcp = clientetcp;
     }
-    
-    public ClienteTCP getClienteTCP(){
+
+    public ClienteTCP getClienteTCP() {
         return this.clientetcp;
     }
-    
-    public void setChat(ChatDiretoView chat){
+
+    public void setChat(ChatDiretoView chat) {
         this.chat.add(chat);
     }
-    
-    public ArrayList<ChatDiretoView> getChat (){
+
+    public ArrayList<ChatDiretoView> getChat() {
         return this.chat;
     }
+
     public EmpregadoView(ClienteTCP clientetcp) {
         initComponents();
         this.modelOnline = (DefaultTableModel) this.listaOnline.getModel();
@@ -46,47 +50,55 @@ public class EmpregadoView extends javax.swing.JFrame {
 
     private EmpregadoView() {
     }
-    
-    public void preencherListaOnline(ArrayList<Cliente> clientes){
-     if(this.modelOnline.getRowCount() !=0)
-            for(int i = 0; i < this.modelOnline.getRowCount();)
+
+    public void preencherListaOnline(ArrayList<Cliente> clientes) {
+        if (this.modelOnline.getRowCount() != 0) {
+            for (int i = 0; i < this.modelOnline.getRowCount();) {
                 this.modelOnline.removeRow(i);
-        
-        for(Cliente cliente: clientes){
-            if(cliente == null) return;
+            }
+        }
+
+        for (Cliente cliente : clientes) {
+            if (cliente == null) {
+                return;
+            }
             this.modelOnline.addRow(new Object[]{cliente.getNome(),
-                                                   cliente.getIp(),
-                                                   cliente.getPorta()});
+                cliente.getIp(),
+                cliente.getPorta()});
         }
     }
-        
-    public void preencherListaServicos(ArrayList<Servico> servicos){
-        if(this.modelServicos.getRowCount() !=0)
-            for(int i = 0; i < this.modelServicos.getRowCount();)
+
+    public void preencherListaServicos(ArrayList<Servico> servicos) {
+        if (this.modelServicos.getRowCount() != 0) {
+            for (int i = 0; i < this.modelServicos.getRowCount();) {
                 this.modelServicos.removeRow(i);
-        
-        for(Servico servico: servicos){
-            if(servico == null) return;
-            this.modelServicos.addRow(new Object[]{servico.getCargo(), 
-                                                   servico.getSalario(), 
-                                                   servico.getDescricao(),
-                                                   servico.getEmpregador().getNome(),
-                                                   servico.getEmpregador().getIp(),
-                                                   servico.getEmpregador().getPorta()});
+            }
+        }
+
+        for (Servico servico : servicos) {
+            if (servico == null) {
+                return;
+            }
+            this.modelServicos.addRow(new Object[]{servico.getCargo(),
+                servico.getSalario(),
+                servico.getDescricao(),
+                servico.getEmpregador().getNome(),
+                servico.getEmpregador().getIp(),
+                servico.getEmpregador().getPorta()});
         }
     }
-    
-    public void preencherListaChat(String mensagem){
+
+    public void preencherListaChat(String mensagem) {
         this.modelChat.addElement(mensagem);
     }
-    
-    public void servidorClose(){
+
+    public void servidorClose() {
         JOptionPane.showMessageDialog(null, "Servidor fechado! Tente mais tarde");
         LoginView login = new LoginView();
         login.setVisible(true);
         this.dispose();
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -108,6 +120,7 @@ public class EmpregadoView extends javax.swing.JFrame {
         listaOnline = new javax.swing.JTable();
         bInteresse = new javax.swing.JButton();
         bMensagemSv = new javax.swing.JButton();
+        iFiltro = new javax.swing.JTextField();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -135,6 +148,8 @@ public class EmpregadoView extends javax.swing.JFrame {
         });
         listaChat.setViewportView(listChat);
 
+        iMensagem.setMinimumSize(new java.awt.Dimension(14, 27));
+
         bEnviarMensagem.setText("ENVIAR MENSAGEM GERAL");
         bEnviarMensagem.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -156,7 +171,7 @@ public class EmpregadoView extends javax.swing.JFrame {
             }
         });
 
-        tServicos.setText("Serviços Disponíveis");
+        tServicos.setText("Buscar:");
 
         listaServicos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -222,6 +237,13 @@ public class EmpregadoView extends javax.swing.JFrame {
             }
         });
 
+        iFiltro.setMinimumSize(new java.awt.Dimension(14, 27));
+        iFiltro.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                iFiltroKeyPressed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -231,14 +253,19 @@ public class EmpregadoView extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane3)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(iMensagem, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(tChat, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(listaChat, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(bEnviarMensagem, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE))
-                            .addComponent(tServicos))
-                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(iMensagem, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(tChat, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(listaChat, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(bEnviarMensagem, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE))
+                                .addGap(18, 18, 18))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(tServicos)
+                                .addGap(18, 18, 18)
+                                .addComponent(iFiltro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(bMensagemSv, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -268,19 +295,20 @@ public class EmpregadoView extends javax.swing.JFrame {
                     .addComponent(listaChat))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(iMensagem, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(bDesconectar)
-                    .addComponent(bMensagemPv))
+                    .addComponent(bMensagemPv)
+                    .addComponent(iMensagem, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(bEnviarMensagem)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tServicos)
                     .addComponent(bInteresse)
-                    .addComponent(bMensagemSv))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(bMensagemSv)
+                    .addComponent(tServicos)
+                    .addComponent(iFiltro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -320,12 +348,18 @@ public class EmpregadoView extends javax.swing.JFrame {
     }//GEN-LAST:event_bInteresseActionPerformed
 
     private void bMensagemSvMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bMensagemSvMouseClicked
-      int row = this.listaServicos.getSelectedRow();
+        int row = this.listaServicos.getSelectedRow();
         Cliente auxiliar = new Cliente(this.modelServicos.getValueAt(row, 3).toString(), this.modelServicos.getValueAt(row, 4).toString(), (int) this.modelServicos.getValueAt(row, 5));
         ChatDiretoView chatDireto = new ChatDiretoView(this.clientetcp, auxiliar);
         this.chat.add(chatDireto);
         chatDireto.setVisible(true);
     }//GEN-LAST:event_bMensagemSvMouseClicked
+
+    private void iFiltroKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_iFiltroKeyPressed
+        TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(((DefaultTableModel) this.listaServicos.getModel()));
+        sorter.setRowFilter(RowFilter.regexFilter(iFiltro.getText()));
+        this.listaServicos.setRowSorter(sorter);
+    }//GEN-LAST:event_iFiltroKeyPressed
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -341,6 +375,7 @@ public class EmpregadoView extends javax.swing.JFrame {
     private javax.swing.JButton bInteresse;
     private javax.swing.JButton bMensagemPv;
     private javax.swing.JButton bMensagemSv;
+    private javax.swing.JTextField iFiltro;
     private javax.swing.JTextField iMensagem;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
