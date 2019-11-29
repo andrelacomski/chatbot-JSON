@@ -82,6 +82,7 @@ public class ClienteTCP extends Thread {
             Protocolo protocolo = new Protocolo("logout");
             Gson gson = new Gson();
             out.writeUTF(gson.toJson(protocolo));
+            this.recever.setClose();
             this.out.close();
             this.in.close();
             this.serverSocket.close();            

@@ -14,6 +14,11 @@ public class Recever extends Thread {
     private EmpregadorView empregador;
     private EmpregadoView empregado;
     private String tipo;
+    private boolean close;
+
+    public void setClose() {
+        this.close = true;
+    }
 
     public Recever(DataInputStream in, EmpregadorView home) {
         this.in = in;
@@ -26,97 +31,100 @@ public class Recever extends Thread {
         this.empregado = home;
         this.tipo = "empregado";
     }
-    
+
     @Override
     public void run() {
         String recebe;
-        boolean close = false;
+        this.close = false;
         try {
-            while ((recebe = this.in.readUTF()) != null) { // ler dados do cliente
+            while ((recebe = this.in.readUTF()) != null && !this.close) { // ler dados do cliente
                 System.out.println(recebe);
                 Protocolo protocolo = new Gson().fromJson(recebe, Protocolo.class);
                 Gson gson = new Gson();
-                switch(protocolo.getAction()){
+                switch (protocolo.getAction()) {
                     case "listarUsuarios":
-                        if(this.tipo.equals("empregado"))
+                        if (this.tipo.equals("empregado")) {
                             this.empregado.preencherListaOnline((ArrayList<Cliente>) protocolo.getClientes());
-                        else
+                        } else {
                             this.empregador.preencherListaOnline((ArrayList<Cliente>) protocolo.getClientes());
+                        }
                         break;
                     case "listarServicos":
-                        if(this.tipo.equals("empregado"))
+                        if (this.tipo.equals("empregado")) {
                             this.empregado.preencherListaServicos((ArrayList<Servico>) protocolo.getServicos());
-                        else
+                        } else {
                             this.empregador.preencherListaServicos((ArrayList<Servico>) protocolo.getServicos());
+                        }
                         break;
                     case "broadcast":
-                        if(this.tipo.equals("empregado"))
+                        if (this.tipo.equals("empregado")) {
                             this.empregado.preencherListaChat(protocolo.getMensagem());
-                        else
+                        } else {
                             this.empregador.preencherListaChat(protocolo.getMensagem());
+                        }
                         break;
                     case "mensagemDireta":
-                        protocolo.setMensagem(protocolo.getRemetente().getNome()+ ": " + protocolo.getMensagem());
-                        if(this.tipo.equals("empregado")){
+                        protocolo.setMensagem(protocolo.getRemetente().getNome() + ": " + protocolo.getMensagem());
+                        if (this.tipo.equals("empregado")) {
                             ArrayList<ChatDiretoView> auxiliar = this.empregado.getChat();
-                            if(auxiliar.size() < 1){
+                            if (auxiliar.size() < 1) {
                                 Cliente clienteDireto = new Cliente(protocolo.getRemetente().getNome(),
-                                                                    protocolo.getRemetente().getIp(),
-                                                                    protocolo.getRemetente().getPorta());
-                                
+                                        protocolo.getRemetente().getIp(),
+                                        protocolo.getRemetente().getPorta());
+
                                 ChatDiretoView chatDireto = new ChatDiretoView(this.empregado.getClienteTCP(), clienteDireto);
                                 auxiliar.add(chatDireto);
                                 chatDireto.setVisible(true);
                                 chatDireto.preencheMensagem(protocolo.getMensagem());
-                            } else{
+                            } else {
                                 boolean achou = false;
-                                for(ChatDiretoView chats: auxiliar){
-                                    if(chats.getCliente().getIp().equals(protocolo.getRemetente().getIp()) &&
-                                       chats.getCliente().getPorta() == protocolo.getRemetente().getPorta() &&
-                                       chats.getCliente().getNome().equals(protocolo.getRemetente().getNome())){
+                                for (ChatDiretoView chats : auxiliar) {
+                                    if (chats.getCliente().getIp().equals(protocolo.getRemetente().getIp())
+                                            && chats.getCliente().getPorta() == protocolo.getRemetente().getPorta()
+                                            && chats.getCliente().getNome().equals(protocolo.getRemetente().getNome())) {
                                         chats.preencheMensagem(protocolo.getMensagem());
                                         achou = true;
                                         break;
                                     }
                                 }
-                                if(!achou){
+                                if (!achou) {
                                     Cliente clienteDireto = new Cliente(protocolo.getRemetente().getNome(),
-                                                                    protocolo.getRemetente().getIp(),
-                                                                    protocolo.getRemetente().getPorta());
-                                
+                                            protocolo.getRemetente().getIp(),
+                                            protocolo.getRemetente().getPorta());
+
                                     ChatDiretoView chatDireto = new ChatDiretoView(this.empregado.getClienteTCP(), clienteDireto);
                                     auxiliar.add(chatDireto);
                                     chatDireto.setVisible(true);
                                     chatDireto.preencheMensagem(protocolo.getMensagem());
                                 }
-                            }                            
+                            }
                         } else {
                             ArrayList<ChatDiretoView> auxiliar = this.empregador.getChat();
-                            if(auxiliar.size() < 1){
+                            if (auxiliar.size() < 1) {
                                 Cliente clienteDireto = new Cliente(protocolo.getRemetente().getNome(),
-                                                                    protocolo.getRemetente().getIp(),
-                                                                    protocolo.getRemetente().getPorta());
-                                
+                                        protocolo.getRemetente().getIp(),
+                                        protocolo.getRemetente().getPorta());
+
                                 ChatDiretoView chatDireto = new ChatDiretoView(this.empregador.getClienteTCP(), clienteDireto);
                                 auxiliar.add(chatDireto);
                                 chatDireto.setVisible(true);
                                 chatDireto.preencheMensagem(protocolo.getMensagem());
                             } else {
                                 boolean achou = false;
-                                for(ChatDiretoView chats: auxiliar){
-                                    if(chats.getCliente().getIp().equals(protocolo.getRemetente().getIp()) &&
-                                       chats.getCliente().getPorta() == protocolo.getRemetente().getPorta() &&
-                                       chats.getCliente().getNome().equals(protocolo.getRemetente().getNome())){
+                                for (ChatDiretoView chats : auxiliar) {
+                                    if (chats.getCliente().getIp().equals(protocolo.getRemetente().getIp())
+                                            && chats.getCliente().getPorta() == protocolo.getRemetente().getPorta()
+                                            && chats.getCliente().getNome().equals(protocolo.getRemetente().getNome())) {
                                         chats.preencheMensagem(protocolo.getMensagem());
                                         achou = true;
                                         break;
                                     }
                                 }
-                                if(!achou){
+                                if (!achou) {
                                     Cliente clienteDireto = new Cliente(protocolo.getRemetente().getNome(),
-                                                                    protocolo.getRemetente().getIp(),
-                                                                    protocolo.getRemetente().getPorta());
-                                
+                                            protocolo.getRemetente().getIp(),
+                                            protocolo.getRemetente().getPorta());
+
                                     ChatDiretoView chatDireto = new ChatDiretoView(this.empregador.getClienteTCP(), clienteDireto);
                                     auxiliar.add(chatDireto);
                                     chatDireto.setVisible(true);
@@ -124,18 +132,17 @@ public class Recever extends Thread {
                                 }
                             }
                         }
-                        break;
                 }
-                
-                if (close)
-                    break;             
             }
         } catch (IOException ex) {
-            System.out.println("SERVIDOR CAIU");
-            if(this.tipo.equals("empregado"))
-                this.empregado.servidorClose();
-            else
-                this.empregador.servidorClose();
+            if (!close) {
+                if (this.tipo.equals("empregado")) {
+                    this.empregado.servidorClose();
+                } else {
+                    this.empregador.servidorClose();
+                }
+            }
         }
+
     }
 }

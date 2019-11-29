@@ -106,6 +106,8 @@ public class EmpregadoView extends javax.swing.JFrame {
         listaServicos = new javax.swing.JTable();
         jScrollPane4 = new javax.swing.JScrollPane();
         listaOnline = new javax.swing.JTable();
+        bInteresse = new javax.swing.JButton();
+        bMensagemSv = new javax.swing.JButton();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -206,6 +208,20 @@ public class EmpregadoView extends javax.swing.JFrame {
         });
         jScrollPane4.setViewportView(listaOnline);
 
+        bInteresse.setText("TENHO INTERESSE!");
+        bInteresse.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bInteresseActionPerformed(evt);
+            }
+        });
+
+        bMensagemSv.setText("MENSAGEM PARA EMPREGADOR");
+        bMensagemSv.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                bMensagemSvMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -216,22 +232,27 @@ public class EmpregadoView extends javax.swing.JFrame {
                     .addComponent(jScrollPane3)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tServicos)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(iMensagem, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(tChat, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(listaChat, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(bEnviarMensagem, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE))
+                            .addComponent(tServicos))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(iMensagem, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(tChat, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(listaChat, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(bEnviarMensagem, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE))
-                                .addGap(18, 18, 18)
+                                .addComponent(bMensagemSv, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(bInteresse, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(bMensagemPv, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(bDesconectar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                     .addComponent(tOnlines)
-                                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -252,11 +273,14 @@ public class EmpregadoView extends javax.swing.JFrame {
                     .addComponent(bMensagemPv))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(bEnviarMensagem)
-                .addGap(18, 18, 18)
-                .addComponent(tServicos)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tServicos)
+                    .addComponent(bInteresse)
+                    .addComponent(bMensagemSv))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -291,6 +315,18 @@ public class EmpregadoView extends javax.swing.JFrame {
         chatDireto.setVisible(true);
     }//GEN-LAST:event_bMensagemPvMouseClicked
 
+    private void bInteresseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bInteresseActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_bInteresseActionPerformed
+
+    private void bMensagemSvMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bMensagemSvMouseClicked
+      int row = this.listaServicos.getSelectedRow();
+        Cliente auxiliar = new Cliente(this.modelServicos.getValueAt(row, 3).toString(), this.modelServicos.getValueAt(row, 4).toString(), (int) this.modelServicos.getValueAt(row, 5));
+        ChatDiretoView chatDireto = new ChatDiretoView(this.clientetcp, auxiliar);
+        this.chat.add(chatDireto);
+        chatDireto.setVisible(true);
+    }//GEN-LAST:event_bMensagemSvMouseClicked
+
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -302,7 +338,9 @@ public class EmpregadoView extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bDesconectar;
     private javax.swing.JButton bEnviarMensagem;
+    private javax.swing.JButton bInteresse;
     private javax.swing.JButton bMensagemPv;
+    private javax.swing.JButton bMensagemSv;
     private javax.swing.JTextField iMensagem;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;

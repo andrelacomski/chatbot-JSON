@@ -80,7 +80,7 @@ public class ChatDiretoView extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 478, Short.MAX_VALUE)
                     .addComponent(iMensagem)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(bVoltar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -108,7 +108,7 @@ public class ChatDiretoView extends javax.swing.JFrame {
     private void bEnviarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bEnviarMouseClicked
         Protocolo protocolo = new Protocolo("mensagemDireta");
         Gson gson = new Gson();
-        String mensagem = "[EU]: " + iMensagem.getText();
+        String mensagem = "Eu: " + iMensagem.getText();
         protocolo.setMensagem(iMensagem.getText());
         this.modelMensagem.addElement(mensagem);
         protocolo.setDestinatario(this.cliente);

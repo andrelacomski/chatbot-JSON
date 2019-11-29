@@ -41,13 +41,13 @@ public class ServidorTCP extends Thread {
                 switch (protocolo.getAction()) {
                     case "login":
                         this.cliente.setNome(protocolo.getNome());
-                      //  this.cliente.setTipo(protocolo.getTipo());
+                        this.cliente.setTipo(protocolo.getTipo());
                         this.login(protocolo, out);
                         break;
                     case "logout":
-                        out.close();
-                        in.close();
-                        clienteSocket.close();
+//                        out.close();
+//                        in.close();
+//                        clienteSocket.close();
                         this.desconectar();
                         close = true;
                         break;
@@ -152,6 +152,7 @@ public class ServidorTCP extends Thread {
     }
     
     public void mensagemDireta(Protocolo protocolo, DataOutputStream out) throws IOException{
+        boolean online = false;
         ListaClientes ctrlCliente = ListaClientes.getInstance();
         Protocolo envio = new Protocolo("mensagemDireta");
         Gson gson = new Gson();
@@ -163,10 +164,15 @@ public class ServidorTCP extends Thread {
                client.getNome().equals(protocolo.getDestinatario().getNome()) &&
                client.getPorta() == protocolo.getDestinatario().getPorta()){
                 client.saidaCliente.writeUTF(gson.toJson(envio));
+                online = true;
                 break;
             }
         }
-        
+        if(!online){
+            envio.setRemetente(protocolo.getDestinatario());
+            envio.setMensagem("Olá, estou offline e não vou conseguir ver sua mensagem!");
+            out.writeUTF(gson.toJson(envio));
+        }
         System.out.println("MENSAGEM DIRETA RECEBIDA:" + gson.toJson(protocolo));
         System.out.println("MENSAGEM DIRETA ENVIADA:" + gson.toJson(envio));
     }
