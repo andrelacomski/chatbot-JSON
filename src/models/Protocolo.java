@@ -3,6 +3,7 @@ package models;
 import java.util.List;
 
 public class Protocolo {
+
     private String action;
     private String nome;
     private String mensagem;
@@ -10,19 +11,23 @@ public class Protocolo {
     private String tipo;
     private Cliente remetente;
     private Cliente destinatario;
-    private List <Cliente> usuarios;
-    private List <Servico> servicos;
+    private List<Cliente> usuarios;
+    private List<Cliente> interessados;
+    private List<Servico> servicos;
 
-    public Protocolo(String action){
+    public Protocolo() {
+    }
+
+    public Protocolo(String action) {
         this.action = action;
     }
 
-    public Protocolo(String action, String nome, String tipo){
+    public Protocolo(String action, String nome, String tipo) {
         this.action = action;
         this.nome = nome;
         this.tipo = tipo;
     }
-       
+
     public void setAction(String action) {
         this.action = action;
     }
@@ -37,6 +42,34 @@ public class Protocolo {
 
     public void setMensagem(String mensagem) {
         this.mensagem = mensagem;
+    }
+
+    public void setServicos(List<Servico> servicos) {
+        this.servicos = servicos;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public void setUsuarios(List<Cliente> usuarios) {
+        this.usuarios = usuarios;
+    }
+
+    public void setRemetente(Cliente remetente) {
+        this.remetente = remetente;
+    }
+
+    public void setDestinatario(Cliente destinatario) {
+        this.destinatario = destinatario;
+    }
+
+    public void setClientes(List<Cliente> clientes) {
+        this.usuarios = clientes;
+    }
+
+    public void setInteressados(List<Cliente> interessados) {
+        this.interessados = interessados;
     }
 
     public Servico getServico() {
@@ -54,21 +87,13 @@ public class Protocolo {
     public String getMensagem() {
         return mensagem;
     }
-    
-    public List<Cliente> getClientes(){
+
+    public List<Cliente> getClientes() {
         return this.usuarios;
     }
-    
-    public void setClientes(List<Cliente> clientes){
-        this.usuarios = clientes;
-    }
 
-    public List<Servico> getServicos(){
+    public List<Servico> getServicos() {
         return this.servicos;
-    }
-    
-    public void setServicos(List<Servico> servicos){
-        this.servicos = servicos;
     }
 
     public String getTipo() {
@@ -79,15 +104,7 @@ public class Protocolo {
         return usuarios;
     }
 
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
-
-    public void setUsuarios(List<Cliente> usuarios) {
-        this.usuarios = usuarios;
-    }
-    
-        public Cliente getRemetente() {
+    public Cliente getRemetente() {
         return remetente;
     }
 
@@ -95,14 +112,7 @@ public class Protocolo {
         return destinatario;
     }
 
-    public void setRemetente(Cliente remetente) {
-        this.remetente = remetente;
+    public List<Cliente> getInteressados() {
+        return interessados;
     }
-
-    public void setDestinatario(Cliente destinatario) {
-        this.destinatario = destinatario;
-    }
-    
-    
-    
 }

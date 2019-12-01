@@ -99,6 +99,12 @@ public class EmpregadoView extends javax.swing.JFrame {
         this.dispose();
     }
 
+    public void contratado(Servico servico) {
+        JOptionPane.showMessageDialog(null, "PARABÉNS! Você foi contratado no serviço: [Cargo]: "
+                                        + servico.getCargo() + " [Salário]: " + servico.getSalario() 
+                                        + " [Empregador]: " + servico.getEmpregador().getNome());
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -294,18 +300,20 @@ public class EmpregadoView extends javax.swing.JFrame {
                     .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addComponent(listaChat))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(bDesconectar)
-                    .addComponent(bMensagemPv)
-                    .addComponent(iMensagem, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(iMensagem, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(bDesconectar)
+                        .addComponent(bMensagemPv)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(bEnviarMensagem)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(bInteresse)
-                    .addComponent(bMensagemSv)
-                    .addComponent(tServicos)
-                    .addComponent(iFiltro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(iFiltro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(bInteresse)
+                        .addComponent(bMensagemSv)
+                        .addComponent(tServicos)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -344,7 +352,10 @@ public class EmpregadoView extends javax.swing.JFrame {
     }//GEN-LAST:event_bMensagemPvMouseClicked
 
     private void bInteresseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bInteresseActionPerformed
-        // TODO add your handling code here:
+        int row = this.listaServicos.getSelectedRow();
+        Cliente c = new Cliente(this.modelServicos.getValueAt(row, 3).toString(), this.modelServicos.getValueAt(row, 4).toString(), (int) this.modelServicos.getValueAt(row, 5));
+        Servico servico = new Servico(this.modelServicos.getValueAt(row, 0).toString(), this.modelServicos.getValueAt(row, 2).toString(), (float) this.modelServicos.getValueAt(row, 1), c);
+        this.clientetcp.interesseServico(servico);
     }//GEN-LAST:event_bInteresseActionPerformed
 
     private void bMensagemSvMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bMensagemSvMouseClicked

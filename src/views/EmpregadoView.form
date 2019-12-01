@@ -107,19 +107,23 @@
                   <Component id="listaChat" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="bDesconectar" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="bMensagemPv" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="iMensagem" alignment="0" min="-2" pref="31" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="bDesconectar" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="bMensagemPv" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="bEnviarMensagem" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="bInteresse" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="bMensagemSv" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="tServicos" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="iFiltro" alignment="0" max="32767" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="bInteresse" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="bMensagemSv" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="tServicos" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jScrollPane3" min="-2" pref="132" max="-2" attributes="0"/>

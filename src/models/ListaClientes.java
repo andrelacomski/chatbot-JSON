@@ -13,14 +13,14 @@ public class ListaClientes {
     }
 
     public static synchronized ListaClientes getInstance() {
-        ListaClientes r = instance;
-            synchronized (lock) {    // While we were waiting for the lock, another 
-                r = instance;        // thread may have instantiated the object.
-                if (r == null) {
-                    r = new ListaClientes();
-                    instance = r;
-                }
+        ListaClientes r;
+        synchronized (lock) {
+            r = instance;
+            if (r == null) {
+                r = new ListaClientes();
+                instance = r;
             }
+        }
         return r;
     }
 

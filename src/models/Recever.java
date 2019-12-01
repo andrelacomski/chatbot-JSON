@@ -14,6 +14,7 @@ public class Recever extends Thread {
     private EmpregadorView empregador;
     private EmpregadoView empregado;
     private String tipo;
+    private ArrayList<Protocolo> interessados;
     private boolean close;
 
     public void setClose() {
@@ -24,6 +25,7 @@ public class Recever extends Thread {
         this.in = in;
         this.empregador = home;
         this.tipo = "empregador";
+        this.interessados = new ArrayList();
     }
 
     public Recever(DataInputStream in, EmpregadoView home) {
@@ -40,7 +42,6 @@ public class Recever extends Thread {
             while ((recebe = this.in.readUTF()) != null && !this.close) { // ler dados do cliente
                 System.out.println(recebe);
                 Protocolo protocolo = new Gson().fromJson(recebe, Protocolo.class);
-                Gson gson = new Gson();
                 switch (protocolo.getAction()) {
                     case "listarUsuarios":
                         if (this.tipo.equals("empregado")) {
@@ -65,11 +66,11 @@ public class Recever extends Thread {
                         break;
 
                     case "contratacao":
-
+                        this.empregado.contratado(protocolo.getServico());
                         break;
-
                     case "listarInteressados":
-
+                        this.interessados.add(protocolo);
+                        this.empregador.preencherListaInteressados(this.interessados);
                         break;
                     case "mensagemDireta":
                         protocolo.setMensagem(protocolo.getRemetente().getNome() + ": " + protocolo.getMensagem());

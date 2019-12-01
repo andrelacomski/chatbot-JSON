@@ -3,6 +3,8 @@ package models;
 import com.google.gson.Gson;
 import java.io.*;
 import java.net.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import views.ChatDiretoView;
 import views.EmpregadoView;
 import views.EmpregadorView;
@@ -18,7 +20,7 @@ public class ClienteTCP extends Thread {
     private EmpregadoView empregado;
     private ChatDiretoView chatDireto;
     private Recever recever;
-    
+
     public ClienteTCP(Cliente cliente, EmpregadorView home) throws IOException {
         this.cliente = cliente;
         this.empregador = home;
@@ -28,11 +30,11 @@ public class ClienteTCP extends Thread {
         this.cliente = cliente;
         this.empregado = home;
     }
-    
-    public void setChat(ChatDiretoView chatDireto){
+
+    public void setChat(ChatDiretoView chatDireto) {
         this.chatDireto = chatDireto;
     }
-    
+
     public Cliente getCliente() {
         return cliente;
     }
@@ -40,7 +42,7 @@ public class ClienteTCP extends Thread {
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
     }
-    
+
     public void setMensagem(String mensagem) {
         this.mensagem = mensagem;
     }
@@ -56,12 +58,13 @@ public class ClienteTCP extends Thread {
 
             this.out = new DataOutputStream(this.serverSocket.getOutputStream());
             this.in = new DataInputStream(this.serverSocket.getInputStream());
-            if(this.cliente.getTipo().equals("empregado"))
-               this.recever = new Recever(in, empregado);
-            else 
+            if (this.cliente.getTipo().equals("empregado")) {
+                this.recever = new Recever(in, empregado);
+            } else {
                 this.recever = new Recever(in, empregador);
+            }
             this.recever.start();
-            
+
             Protocolo protocolo = new Protocolo("login", this.cliente.getNome(), this.cliente.getTipo());
             Gson gson = new Gson();
             out.writeUTF(gson.toJson(protocolo));
@@ -75,18 +78,18 @@ public class ClienteTCP extends Thread {
             System.out.println("[CLIENTE]: Não foi possível obter I/O para o server: " + this.cliente.getIp());
             return false;
         }
-     }
+    }
 
     public boolean desconectar() throws IOException {
-        try{
+        try {
             Protocolo protocolo = new Protocolo("logout");
             Gson gson = new Gson();
             out.writeUTF(gson.toJson(protocolo));
             this.recever.setClose();
             this.out.close();
             this.in.close();
-            this.serverSocket.close();            
-        } catch(IOException ex){
+            this.serverSocket.close();
+        } catch (IOException ex) {
             System.out.println("[CLIENTE]: Problema para desconectar. " + ex.getMessage());
         }
         System.out.println("[CLIENTE]: Desconectado.");
@@ -94,38 +97,65 @@ public class ClienteTCP extends Thread {
     }
 
     public boolean enviarMensagem() throws IOException {
-        try{
+        try {
             System.out.println("[CLIENTE]: Enviando mensagem: " + this.getMensagem());
             Protocolo protocolo = new Protocolo("broadcast");
             protocolo.setMensagem(this.getMensagem());
             Gson gson = new Gson();
             out.writeUTF(gson.toJson(protocolo));
-        } catch(IOException ex){
+        } catch (IOException ex) {
             System.out.println("[CLIENTE]: Problema ao enviar mensagem. " + ex.getMessage());
         }
         return true;
     }
 
-    public boolean cadastrarServico(Servico servico) throws IOException{
-        try{
+    public boolean cadastrarServico(Servico servico) throws IOException {
+        try {
             System.out.println("[CLIENTE]: Cadastrando serviço: " + servico.getCargo());
             Protocolo protocolo = new Protocolo("cadastrarServico");
             protocolo.setServico(servico);
             Gson gson = new Gson();
-            out.writeUTF(gson.toJson(protocolo));            
-        } catch(IOException ex){
+            out.writeUTF(gson.toJson(protocolo));
+        } catch (IOException ex) {
             System.out.println("[CLIENTE]: Problema para cadastrar serviço. " + ex.getMessage());
         }
         return true;
     }
-    
-    public boolean mensagemDireta(Protocolo protocolo) throws IOException{
+
+    public boolean mensagemDireta(Protocolo protocolo) throws IOException {
         Gson gson = new Gson();
         System.out.println("[ENVIANDO MENSAGEM]: " + gson.toJson(protocolo));
         out.writeUTF(gson.toJson(protocolo));
         return true;
     }
-    
+
+    public boolean interesseServico(Servico servico) {
+        try {
+            Gson gson = new Gson();
+            Protocolo protocolo = new Protocolo("interesseServico");
+            protocolo.setServico(servico);
+            System.out.println("[CLIENTE]: " + gson.toJson(protocolo));
+            out.writeUTF(gson.toJson(protocolo));
+        } catch (IOException ex) {
+            System.out.println("[CLIENTE]: Problema para enviar o interesse no serviço");
+        }
+        return true;
+    }
+
+    public boolean contratacao(Servico servico, Cliente cliente) {
+        try {
+            Gson gson = new Gson();
+            Protocolo protocolo = new Protocolo("contratacao");
+            protocolo.setServico(servico);
+            protocolo.setDestinatario(cliente);
+            System.out.println("[CLIENTE]: " + gson.toJson(protocolo));
+            out.writeUTF(gson.toJson(protocolo));
+        } catch (IOException ex) {
+            Logger.getLogger(ClienteTCP.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return true;
+    }
+
     public static void main(String[] args) throws IOException {
     }
 }

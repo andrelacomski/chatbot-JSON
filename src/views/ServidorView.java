@@ -15,7 +15,7 @@ public class ServidorView extends javax.swing.JFrame {
     private DefaultTableModel modelOnline;
     private DefaultTableModel modelServicos;
     private DefaultListModel modelChatGlobal;
-    
+
     public ServidorView() {
         initComponents();
         this.modelOnline = (DefaultTableModel) this.listaOnline.getModel();
@@ -29,40 +29,48 @@ public class ServidorView extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         this.bDesliga.setEnabled(false);
     }
-    
-    public void preencheListaOnline(ArrayList<Cliente> clientes){
-         if(this.modelOnline.getRowCount() !=0)
-            for(int i = 0; i < this.modelOnline.getRowCount();)
+
+    public void preencheListaOnline(ArrayList<Cliente> clientes) {
+        if (this.modelOnline.getRowCount() != 0) {
+            for (int i = 0; i < this.modelOnline.getRowCount();) {
                 this.modelOnline.removeRow(i);
-        
-        for(Cliente cliente: clientes){
-            if(cliente == null) return;
+            }
+        }
+
+        for (Cliente cliente : clientes) {
+            if (cliente == null) {
+                return;
+            }
             this.modelOnline.addRow(new Object[]{cliente.getNome(),
-                                                   cliente.getIp(),
-                                                   cliente.getPorta()});
+                cliente.getIp(),
+                cliente.getPorta()});
         }
     }
-    
-    public void preencheListaServicos(ArrayList<Servico> servicos){
-        if(this.modelServicos.getRowCount() !=0)
-            for(int i = 0; i < this.modelServicos.getRowCount();)
+
+    public void preencheListaServicos(ArrayList<Servico> servicos) {
+        if (this.modelServicos.getRowCount() != 0) {
+            for (int i = 0; i < this.modelServicos.getRowCount();) {
                 this.modelServicos.removeRow(i);
-        
-        for(Servico servico: servicos){
-            if(servico == null) return;
-            this.modelServicos.addRow(new Object[]{servico.getCargo(), 
-                                                   servico.getSalario(), 
-                                                   servico.getDescricao(),
-                                                   servico.getEmpregador().getNome(),
-                                                   servico.getEmpregador().getIp(),
-                                                   servico.getEmpregador().getPorta()});
+            }
+        }
+
+        for (Servico servico : servicos) {
+            if (servico == null) {
+                return;
+            }
+            this.modelServicos.addRow(new Object[]{servico.getCargo(),
+                servico.getSalario(),
+                servico.getDescricao(),
+                servico.getEmpregador().getNome(),
+                servico.getEmpregador().getIp(),
+                servico.getEmpregador().getPorta()});
         }
     }
-    
-    public void preencheListaChatGlobal(String mensagem){
+
+    public void preencheListaChatGlobal(String mensagem) {
         this.modelChatGlobal.addElement(mensagem);
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -239,8 +247,9 @@ public class ServidorView extends javax.swing.JFrame {
     private void bDesligaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bDesligaActionPerformed
         try {
             int confirma = JOptionPane.showConfirmDialog(null, "DESLIGAR SERVIDOR?");
-            if (confirma == 0)
+            if (confirma == 0) {
                 server.stop();
+            }
         } catch (Exception e) {
             System.out.println("SOCKET CLOSED");
         }
