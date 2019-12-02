@@ -230,7 +230,7 @@ public class ServidorTCP extends Thread {
         ListaClientes ctrlCliente = ListaClientes.getInstance();
 
         envio.setServico(protocolo.getServico());
-        ctrlServico.getServicos().remove(envio.getServico());
+        ctrlServico.getServicos().remove(ctrlServico.getServico(envio.getServico()));
         envioServicos.setServicos((ArrayList<Servico>) ctrlServico.getServicos());
         main.preencheListaServicos((ArrayList<Servico>) ctrlServico.getServicos());
 
